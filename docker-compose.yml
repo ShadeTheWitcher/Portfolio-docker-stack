@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./frontend
+    image: shadetw/portfolio-frontend:local
+    ports:
+      - "3000:80" # nginx sirve el build de React
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost:4000
+
+  backend:
+    build: ./backend
+    image: shadetw/portfolio-backend:local
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=postgres://postgres:example@db:5432/portfolio
+      - PORT=4000
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/usr/src/app
+
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: portfolio
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
