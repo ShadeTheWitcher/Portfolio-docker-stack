@@ -3,7 +3,7 @@ services:
     build:
       context: ./frontend
       args:
-        REACT_APP_API_URL: "http://backend:4000"
+        REACT_APP_API_URL: "http://192.168.1.13:4000"
     ports:
       - "3000:80"
     depends_on:
