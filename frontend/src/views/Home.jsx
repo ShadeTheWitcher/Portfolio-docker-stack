@@ -13,7 +13,7 @@ function Home() {
   }, []);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '60px' }}>
       <Card>{msg}</Card>
     </div>
   );
