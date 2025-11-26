@@ -1,18 +1,54 @@
 
 services:
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.le.acme.httpchallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.le.acme.email=tu@email"
+      - "--certificatesresolvers.le.acme.storage=/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./acme.json:/acme.json"
+    restart: unless-stopped
+
   frontend:
     build: ./frontend
-    ports:
-      - "3000:80"
+    expose:
+      - "80"
     environment:
-      REACT_APP_API_URL: "http://localhost:4000"  # dinámico dentro de la red de Docker
+      REACT_APP_API_URL: "https://api.shade125.ddns.net"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.rule=Host(`shade125.ddns.net`)"
+      - "traefik.http.routers.front.entrypoints=websecure"
+      - "traefik.http.routers.front.tls.certresolver=le"
+      - "traefik.http.services.front.loadbalancer.server.port=80"
     depends_on:
       - backend
+    restart: unless-stopped
 
   backend:
     build: ./backend
-    ports:
-      - "4000:4000"
+    expose:
+      - "4000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.shade125.ddns.net`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=le"
+      - "traefik.http.services.api.loadbalancer.server.port=4000"
+    environment:
+      DATABASE_URL: "postgres://postgres:example@db:5432/portfolio"
+    depends_on:
+      - db
+    restart: unless-stopped
 
   db:
     image: postgres:15-alpine
@@ -22,6 +58,7 @@ services:
       POSTGRES_PASSWORD: example
     volumes:
       - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
 
 volumes:
   pgdata:
