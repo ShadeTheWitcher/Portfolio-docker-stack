@@ -76,3 +76,6 @@ desktop.ini
 # === Misc ===
 *.local
 *.lock
+
+# Traefik ACME (certificados)
+acme.json

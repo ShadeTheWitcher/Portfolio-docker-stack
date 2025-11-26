@@ -1,14 +1,14 @@
-
 services:
   traefik:
     image: traefik:v3.0
     command:
       - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"   #  Traefik ignora todos los contenedores excepto los que tengan traefik.enable=true
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.le.acme.httpchallenge=true"
       - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.le.acme.email=tu@email"
+      - "--certificatesresolvers.le.acme.email=shadethewitcher@gmail.com" #cambiar email por el propio
       - "--certificatesresolvers.le.acme.storage=/acme.json"
     ports:
       - "80:80"
