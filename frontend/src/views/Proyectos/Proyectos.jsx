@@ -1,4 +1,5 @@
 // views/Home.jsx
+import './Proyectos.scss';
 export default function Proyectos() {
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>

@@ -1,0 +1,159 @@
+.home-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  color: #fff;
+  background: #0f0f0f;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ============================
+   SECCIÓN DE BIENVENIDA
+============================ */
+
+.welcome-section {
+  text-align: center;
+  max-width: 900px;
+  margin-bottom: 4rem;
+
+  .title {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+  }
+
+  .subtitle {
+    font-size: 1.4rem;
+    font-weight: 500;
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro {
+    font-size: 1.1rem;
+    opacity: 0.85;
+    margin-bottom: 2rem;
+
+    a {
+      color: #ff0077;
+      text-decoration: none;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+/* Botón principal */
+.btn-primary {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  background: #ff0077;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  margin-bottom: 2rem;
+
+  &:hover {
+    background: #d60065;
+    transform: translateY(-3px);
+  }
+}
+
+/* ============================
+   REDES SOCIALES
+============================ */
+
+.social-box {
+  margin-top: 2rem;
+
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+
+    a {
+      color: #ff0077;
+      font-size: 2.5rem;
+      transition: 0.3s;
+
+      &:hover {
+        color: #d60065;
+        transform: scale(1.15);
+      }
+    }
+  }
+}
+
+/* ============================
+   SECCIÓN DE PROYECTOS
+============================ */
+
+.projects-section {
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 3rem;
+  text-align: center;
+
+  h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #ffffff;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .center-btn {
+    margin-top: 3rem;
+
+    .btn-primary {
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 768px) {
+  .welcome-section {
+    .title {
+      font-size: 2.2rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+    }
+
+    .intro {
+      font-size: 1rem;
+    }
+  }
+
+  .projects-section h3 {
+    font-size: 1.7rem;
+  }
+}
