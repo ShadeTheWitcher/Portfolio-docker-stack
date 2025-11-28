@@ -27,13 +27,13 @@ INSERT INTO educacion (id, nombre, descripcion, cant_horas, certificado) VALUES
 -- Table: info_laboral
 CREATE TABLE IF NOT EXISTS info_laboral (
   id SERIAL PRIMARY KEY,
-  cv_pdf BYTEA NOT NULL,
-  sobre_mi TEXT NOT NULL,
+  cv_pdf BYTEA DEFAULT NULL,
+  sobre_mi TEXT DEFAULT NULL,
   correo VARCHAR(60) DEFAULT NULL,
   link_telegram VARCHAR(150) DEFAULT NULL,
   link_linkedin VARCHAR(250) DEFAULT NULL,
-  skills TEXT NOT NULL,
-  imagen_perfil VARCHAR(250) NOT NULL
+  skills TEXT DEFAULT NULL,
+  imagen_perfil VARCHAR(250) DEFAULT NULL
 );
 
 -- Table: nivel_tecnologia
