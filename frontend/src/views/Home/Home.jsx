@@ -88,7 +88,7 @@ function Home() {
         <a href="https://github.com/ShadeTheWitcher" target="_blank" rel="noopener noreferrer" className="social-link github">
           <i className="fa-brands fa-github"></i>
         </a>
-        <a href="https://www.linkedin.com/in/matias-sebastian-lovato-7b254a222/" target="_blank" rel="noopener noreferrer" className="social-link linkedin">
+        <a href="https://www.linkedin.com/in/lovato-matias-shade/" target="_blank" rel="noopener noreferrer" className="social-link linkedin">
           <i className="fab fa-linkedin"></i>
         </a>
         <a href="mailto:matii_seba_11@hotmail.com" className="social-link email">

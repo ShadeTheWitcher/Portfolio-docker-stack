@@ -5,7 +5,7 @@ const Contacto = () => {
   // Datos de contacto - en producción vendrían de una API
   const myDatos = {
     correo: 'matii_seba_11@hotmail.com',
-    link_linkedin: 'https://www.linkedin.com/in/matias-sebastian-lovato-7b254a222/',
+    link_linkedin: 'https://www.linkedin.com/in/lovato-matias-shade/',
     link_telegram: 'https://t.me/ShadeTheWitcher'
   };
 
