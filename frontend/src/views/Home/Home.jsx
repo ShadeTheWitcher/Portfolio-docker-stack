@@ -1,8 +1,13 @@
 import React from "react";
 import './Home.scss';
 import ProjectCard from "../../components/ProjectCard";
+import { calculateFreelanceExperience } from "../../utils/dateUtils";
 
 function Home() {
+  // Fecha de inicio como freelance: 1 de Marzo de 2025
+  const FREELANCE_START_DATE = new Date(2025, 2, 1);
+  const freelanceExp = calculateFreelanceExperience(FREELANCE_START_DATE);
+
   const proyectos = [
     {
       id: 1,
@@ -61,15 +66,15 @@ function Home() {
           {/* Stats */}
           <div className="stats-container">
             <div className="stat-item">
-              <div className="stat-number">2+</div>
-              <div className="stat-label">Años de Experiencia</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">10+</div>
-              <div className="stat-label">Proyectos Completados</div>
+              <div className="stat-number">{freelanceExp.value}</div>
+              <div className="stat-label">{freelanceExp.label}</div>
             </div>
             <div className="stat-item">
               <div className="stat-number">5+</div>
+              <div className="stat-label">Proyectos Realizados</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">10+</div>
               <div className="stat-label">Tecnologías</div>
             </div>
           </div>
