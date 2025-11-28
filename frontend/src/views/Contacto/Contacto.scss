@@ -1,0 +1,284 @@
+.seccion-contacto {
+    background: #0f0f0f;
+    min-height: 100vh;
+    padding: 2rem 2rem;
+    display: flex;
+    align-items: center;
+
+    .container {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .contact-title {
+        font-size: 3rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: #fff;
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+
+        &::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff0077, #7700ff);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+    }
+
+    .contact-card {
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        max-width: 900px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    // Sección de Email
+    .email-section {
+        text-align: center;
+        margin-bottom: 2rem;
+
+        .icon-wrapper {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #ff0077, #7700ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 0, 119, 0.3);
+
+            i {
+                font-size: 2.5rem;
+                color: #fff;
+            }
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .email-text {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.9rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+
+            i {
+                font-size: 1.1rem;
+            }
+
+            &.btn-copy {
+                background: #2a2a2a;
+                color: #fff;
+                border: 2px solid #444;
+
+                &:hover {
+                    background: #333;
+                    border-color: #ff0077;
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(255, 0, 119, 0.2);
+                }
+            }
+
+            &.btn-send {
+                background: linear-gradient(135deg, #ff0077, #d60065);
+                color: #fff;
+
+                &:hover {
+                    background: linear-gradient(135deg, #d60065, #ff0077);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 20px rgba(255, 0, 119, 0.4);
+                }
+            }
+        }
+    }
+
+    // Divisor
+    .divider {
+        text-align: center;
+        margin: 2rem 0;
+        position: relative;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 35%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #444, transparent);
+        }
+
+        &::before {
+            left: 0;
+        }
+
+        &::after {
+            right: 0;
+        }
+
+        span {
+            color: #888;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 0 1rem;
+            background: #1a1a1a;
+        }
+    }
+
+    // Redes Sociales
+    .social-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 1.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+
+        .social-card {
+            background: #222;
+            border: 2px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+
+            &:hover {
+                transform: translateY(-8px);
+                border-color: #ff0077;
+                box-shadow: 0 10px 30px rgba(255, 0, 119, 0.2);
+
+                .social-icon-wrapper {
+                    transform: scale(1.1);
+                }
+            }
+
+            .social-icon-wrapper {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 1.5rem;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.3s ease;
+
+                i {
+                    font-size: 2.5rem;
+                    color: #fff;
+                }
+
+                &.linkedin {
+                    background: linear-gradient(135deg, #0077b5, #00a0dc);
+                    box-shadow: 0 5px 15px rgba(0, 119, 181, 0.3);
+                }
+
+                &.telegram {
+                    background: linear-gradient(135deg, #0088cc, #00aaff);
+                    box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3);
+                }
+            }
+
+            h4 {
+                font-size: 1.3rem;
+                font-weight: 700;
+                color: #fff;
+                margin-bottom: 0.5rem;
+            }
+
+            p {
+                font-size: 0.95rem;
+                color: #999;
+                margin: 0;
+            }
+        }
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .seccion-contacto {
+        padding: 3rem 1rem;
+
+        .contact-title {
+            font-size: 2rem;
+        }
+
+        .contact-card {
+            padding: 2rem 1.5rem;
+            max-width: 100%;
+        }
+
+        .email-section {
+            .icon-wrapper {
+                width: 80px;
+                height: 80px;
+
+                i {
+                    font-size: 2.5rem;
+                }
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            .email-text {
+                font-size: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+
+                .btn-action {
+                    width: 100%;
+                }
+            }
+        }
+
+        .social-section {
+            grid-template-columns: 1fr;
+            max-width: 100%;
+        }
+    }
+}

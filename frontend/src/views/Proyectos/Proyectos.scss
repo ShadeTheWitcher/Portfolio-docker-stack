@@ -1,0 +1,303 @@
+.proyectos-container {
+    min-height: 100vh;
+    background: #0f0f0f;
+    color: #fff;
+    padding: 4rem 2rem;
+}
+
+.proyectos-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeInDown 0.6s ease-out;
+
+    .proyectos-title {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff, #ccc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+    }
+
+    .proyectos-subtitle {
+        font-size: 1.1rem;
+        color: #888;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .title-underline {
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #ff0077, #7700ff);
+        margin: 0 auto;
+        border-radius: 2px;
+    }
+}
+
+.projects-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.project-card {
+    background: #1a1a1a;
+    border: 2px solid #2a2a2a;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-10px);
+        border-color: #ff0077;
+        box-shadow: 0 15px 40px rgba(255, 0, 119, 0.3);
+    }
+}
+
+.project-image {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: #0a0a0a;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+
+        i {
+            font-size: 4rem;
+            color: #444;
+        }
+    }
+
+    .project-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 0, 119, 0.9), rgba(119, 0, 255, 0.9));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+
+        .overlay-content {
+            display: flex;
+            gap: 1rem;
+
+            .overlay-link {
+                width: 50px;
+                height: 50px;
+                background: rgba(255, 255, 255, 0.2);
+                border: 2px solid #fff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 1.5rem;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background: #fff;
+                    color: #ff0077;
+                    transform: scale(1.1);
+                }
+            }
+        }
+    }
+
+    &:hover {
+        img {
+            transform: scale(1.1);
+        }
+
+        .project-overlay {
+            opacity: 1;
+        }
+    }
+}
+
+.project-content {
+    padding: 1.5rem;
+
+    .project-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        color: #fff;
+    }
+
+    .project-description {
+        color: #aaa;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .project-tech {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+
+        .tech-badge {
+            background: rgba(255, 0, 119, 0.1);
+            border: 1px solid rgba(255, 0, 119, 0.3);
+            color: #ff0077;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+    }
+
+    .project-actions {
+        display: flex;
+        gap: 0.8rem;
+
+        .btn-github,
+        .btn-demo {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+
+            i {
+                font-size: 1rem;
+            }
+        }
+
+        .btn-github {
+            background: #2a2a2a;
+            color: #fff;
+            border: 2px solid #3a3a3a;
+
+            &:hover {
+                background: #333;
+                border-color: #ff0077;
+                transform: translateY(-2px);
+            }
+        }
+
+        .btn-demo {
+            background: linear-gradient(135deg, #ff0077, #d60065);
+            color: #fff;
+            border: 2px solid transparent;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(255, 0, 119, 0.4);
+            }
+        }
+    }
+}
+
+.projects-footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid #2a2a2a;
+
+    .footer-text {
+        font-size: 1.2rem;
+        color: #aaa;
+
+        a {
+            color: #ff0077;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: #d60065;
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .proyectos-container {
+        padding: 3rem 1rem;
+    }
+
+    .proyectos-header {
+        .proyectos-title {
+            font-size: 2rem;
+        }
+
+        .proyectos-subtitle {
+            font-size: 1rem;
+        }
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .project-actions {
+        flex-direction: column;
+
+        .btn-github,
+        .btn-demo {
+            width: 100%;
+        }
+    }
+}
