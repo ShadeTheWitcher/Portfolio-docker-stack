@@ -1,12 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './About.scss';
+import { getInfo } from '../../services/infoService';
+import { getSkills } from '../../services/techService';
+import { getAllEducation } from '../../services/educationService';
 
 const About = () => {
-  // Mock data - en producción esto vendría de una API
-  const myDatos = {
-    imagen_perfil: '',
-    sobre_mi: '',
-  };
+  const [info, setInfo] = useState(null);
+  const [skills, setSkills] = useState([]);
+  const [education, setEducation] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [infoData, skillsData, educationData] = await Promise.all([
+          getInfo(),
+          getSkills(),
+          getAllEducation()
+        ]);
+
+        setInfo(infoData);
+        setSkills(skillsData);
+        setEducation(educationData);
+        setError(null);
+      } catch (err) {
+        console.error('Error al cargar datos:', err);
+        setError('No se pudieron cargar los datos');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="about-container">
+        <div className="loading-state">
+          <p>Cargando información...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="about-container">
+        <div className="error-state">
+          <p>{error}</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="about-container">
@@ -18,9 +66,9 @@ const About = () => {
       <div className="about-content">
         <div className="profile-section">
           <div className="profile-image-wrapper">
-            {myDatos?.imagen_perfil ? (
+            {info?.imagen_perfil ? (
               <img
-                src={`/assets/uploads/${myDatos.imagen_perfil}`}
+                src={info.imagen_perfil}
                 alt="Lovato Matias"
                 className="profile-image"
               />
@@ -45,103 +93,95 @@ const About = () => {
         </div>
 
         <div className="bio-section">
-          {myDatos?.sobre_mi ? (
-            <div dangerouslySetInnerHTML={{ __html: myDatos.sobre_mi }} />
+          {info?.sobre_mi ? (
+            <p className="bio-text">{info.sobre_mi}</p>
           ) : (
-            <div className="bio-content">
-              <div className="bio-intro">
-                <h2>¡Hola! 👋</h2>
-                <p className="intro-text">
-                  Soy <span className="highlight">Lovato Matias</span>, un apasionado desarrollador
-                  buscando experiencia en desarrollo web y software.
-                </p>
-              </div>
-
-              <div className="bio-details">
-                <div className="detail-card">
-                  <div className="card-icon">
-                    <i className="fas fa-laptop-code"></i>
-                  </div>
-                  <div className="card-content">
-                    <h3>Pasión por la Tecnología</h3>
-                    <p>
-                      Me encanta la informática y siempre estoy buscando nuevas
-                      oportunidades para aprender y crecer en el mundo del desarrollo.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="detail-card">
-                  <div className="card-icon">
-                    <i className="fas fa-gamepad"></i>
-                  </div>
-                  <div className="card-content">
-                    <h3>Más Allá del Código</h3>
-                    <p>
-                      En mi tiempo libre, disfruto de videojuegos y explorar
-                      nuevas tecnologías que me ayuden a mejorar mis habilidades.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="detail-card">
-                  <div className="card-icon">
-                    <i className="fas fa-handshake"></i>
-                  </div>
-                  <div className="card-content">
-                    <h3>Colaboración</h3>
-                    <p>
-                      Siempre estoy abierto a nuevas conexiones y oportunidades
-                      de colaboración. ¡No dudes en contactarme!
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="skills-section">
-                <h3>Tecnologías que manejo</h3>
-                <div className="skills-grid">
-                  <div className="skill-item">
-                    <i className="fab fa-react"></i>
-                    <span>React</span>
-                  </div>
-                  <div className="skill-item">
-                    <i className="fab fa-node"></i>
-                    <span>Node.js</span>
-                  </div>
-                  <div className="skill-item">
-                    <i className="fab fa-docker"></i>
-                    <span>Docker</span>
-                  </div>
-                  <div className="skill-item">
-                    <i className="fab fa-js"></i>
-                    <span>JavaScript</span>
-                  </div>
-                  <div className="skill-item">
-                    <i className="fab fa-python"></i>
-                    <span>Python</span>
-                  </div>
-                  <div className="skill-item">
-                    <i className="fas fa-database"></i>
-                    <span>SQL</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="cta-section">
-                <a href="/contacto" className="btn-contact">
-                  <i className="fas fa-envelope"></i>
-                  Contáctame
-                </a>
-                <a href="/proyectos" className="btn-projects">
-                  <i className="fas fa-briefcase"></i>
-                  Ver Proyectos
-                </a>
-              </div>
-            </div>
+            <p className="bio-text">
+              Desarrollador Full Stack apasionado por crear experiencias web modernas y funcionales.
+            </p>
           )}
         </div>
       </div>
+
+      {/* Skills Section */}
+      {skills.length > 0 && (
+        <div className="skills-section">
+          <h2 className="section-title">
+            <i className="fas fa-tools"></i>
+            Habilidades Técnicas
+          </h2>
+          <div className="skills-grid">
+            {skills.map((skill) => (
+              <div key={skill.id} className="skill-card">
+                {skill.imagen && (
+                  <img src={skill.imagen} alt={skill.nombre_tec} className="skill-icon" />
+                )}
+                <span className="skill-name">{skill.nombre_tec}</span>
+                {skill.nivel_nombre && (
+                  <span className="skill-level">{skill.nivel_nombre}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Education Section */}
+      {education.length > 0 && (
+        <div className="education-section">
+          <h2 className="section-title">
+            <i className="fas fa-graduation-cap"></i>
+            Educación
+          </h2>
+          <div className="education-timeline">
+            {education.map((edu) => (
+              <div key={edu.id} className="education-item">
+                <div className="education-marker"></div>
+                <div className="education-content">
+                  <h3 className="education-title">{edu.nombre}</h3>
+                  <p className="education-description">{edu.descripcion}</p>
+                  {edu.cant_horas && (
+                    <span className="education-duration">
+                      <i className="fas fa-clock"></i>
+                      {edu.cant_horas}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Contact Info */}
+      {info && (
+        <div className="contact-info-section">
+          <h2 className="section-title">
+            <i className="fas fa-envelope"></i>
+            Información de Contacto
+          </h2>
+          <div className="contact-grid">
+            {info.correo && (
+              <a href={`mailto:${info.correo}`} className="contact-item">
+                <i className="fas fa-envelope"></i>
+                <span>{info.correo}</span>
+              </a>
+            )}
+            {info.link_linkedin && (
+              <a href={info.link_linkedin} target="_blank" rel="noopener noreferrer" className="contact-item">
+                <i className="fab fa-linkedin"></i>
+                <span>LinkedIn</span>
+              </a>
+            )}
+            {info.link_telegram && (
+              <a href={info.link_telegram} target="_blank" rel="noopener noreferrer" className="contact-item">
+                <i className="fab fa-telegram"></i>
+                <span>Telegram</span>
+              </a>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 };
