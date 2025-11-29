@@ -12,6 +12,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import infoRoutes from "./routes/infoRoutes.js";
 import techRoutes from "./routes/techRoutes.js";
 import educationRoutes from "./routes/educationRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 // Configurar dotenv
 dotenv.config();
@@ -22,10 +23,23 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Crear carpeta uploads si no existe
+// Crear carpetas uploads si no existen
 const uploadsDir = path.join(__dirname, 'uploads');
+const imagenesDir = path.join(uploadsDir, 'imagenes');
+const documentosDir = path.join(uploadsDir, 'documentos');
+const otrosDir = path.join(uploadsDir, 'otros');
+
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
+}
+if (!fs.existsSync(imagenesDir)) {
+  fs.mkdirSync(imagenesDir, { recursive: true });
+}
+if (!fs.existsSync(documentosDir)) {
+  fs.mkdirSync(documentosDir, { recursive: true });
+}
+if (!fs.existsSync(otrosDir)) {
+  fs.mkdirSync(otrosDir, { recursive: true });
 }
 
 // Middlewares
@@ -43,6 +57,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/info", infoRoutes);
 app.use("/api/technologies", techRoutes);
 app.use("/api/education", educationRoutes);
+app.use("/api/upload", uploadRoutes);
 
 // Ruta raíz
 app.get("/", (req, res) => {
