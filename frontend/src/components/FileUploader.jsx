@@ -87,7 +87,23 @@ const FileUploader = ({
         }
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
+        if (preview && preview.includes('/uploads/')) {
+            try {
+                // Extraer el path relativo (ej: /uploads/imagenes/archivo.jpg)
+                const relativePath = preview.substring(preview.indexOf('/uploads/'));
+
+                await api.delete('/upload/file', {
+                    data: { filepath: relativePath }
+                });
+
+                toast.success('Archivo eliminado del servidor');
+            } catch (error) {
+                console.error('Error al eliminar archivo:', error);
+                toast.error('Error al eliminar archivo del servidor');
+            }
+        }
+
         setPreview('');
         onChange('');
     };
