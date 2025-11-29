@@ -139,7 +139,7 @@ export const updateProject = async (req, res) => {
           link_github = $4, link_web = $5, imagen = $6, destacado = $7
       WHERE id_proyect = $8 AND baja = 'NO'
       RETURNING *
-    `, [name_proyect, descripcion, categoria_id, link_github || null, link_web || null, imagen || '', destacado || 'NO', id]);
+    `, [name_proyect, descripcion, categoria_id || 1, link_github || null, link_web || null, imagen || '', destacado || 'NO', id]);
 
     if (result.rows.length === 0) {
       await client.query('ROLLBACK');
