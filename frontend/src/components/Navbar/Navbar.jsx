@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <div className="nav-logo">MATIAS</div>
+        <div className="nav-logo">SHADE</div>
 
         <div className="nav-links">
           <Link to="/">Home</Link>
