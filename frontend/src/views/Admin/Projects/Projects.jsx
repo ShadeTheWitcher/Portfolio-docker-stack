@@ -16,6 +16,7 @@ import {
     InputLabel,
     FormControlLabel,
     Switch,
+    Autocomplete,
 } from '@mui/material';
 import {
     Add as AddIcon,
@@ -32,11 +33,13 @@ import {
     deleteProject,
 } from '../../../services/projectService';
 import { getAllCategories } from '../../../services/categoryService';
+import { getAllTechnologies } from '../../../services/techService';
 import FileUploader from '../../../components/FileUploader';
 
 const Projects = () => {
     const [projects, setProjects] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [technologies, setTechnologies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [openDialog, setOpenDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -49,11 +52,13 @@ const Projects = () => {
         link_web: '',
         imagen: '',
         destacado: 'NO',
+        tecnologias: [],
     });
 
     useEffect(() => {
         fetchProjects();
         fetchCategories();
+        fetchTechnologies();
     }, []);
 
     const fetchProjects = async () => {
@@ -79,6 +84,16 @@ const Projects = () => {
         }
     };
 
+    const fetchTechnologies = async () => {
+        try {
+            const data = await getAllTechnologies();
+            setTechnologies(data);
+        } catch (error) {
+            toast.error('Error al cargar tecnologías');
+            console.error(error);
+        }
+    };
+
     const handleOpenDialog = (project = null) => {
         if (project) {
             setCurrentProject(project);
@@ -90,6 +105,7 @@ const Projects = () => {
                 link_web: project.link_web || '',
                 imagen: project.imagen || '',
                 destacado: project.destacado || 'NO',
+                tecnologias: project.tecnologias ? project.tecnologias.map(t => t.id) : [],
             });
         } else {
             setCurrentProject(null);
@@ -101,6 +117,7 @@ const Projects = () => {
                 link_web: '',
                 imagen: '',
                 destacado: 'NO',
+                tecnologias: [],
             });
         }
         setOpenDialog(true);
@@ -318,6 +335,36 @@ const Projects = () => {
                                 ))}
                             </Select>
                         </FormControl>
+
+                        <Autocomplete
+                            multiple
+                            options={technologies}
+                            getOptionLabel={(option) => option.nombre_tec}
+                            value={technologies.filter(tech => formData.tecnologias.includes(tech.id))}
+                            onChange={(event, newValue) => {
+                                setFormData(prev => ({
+                                    ...prev,
+                                    tecnologias: newValue.map(item => item.id)
+                                }));
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Tecnologías Utilizadas"
+                                    placeholder="Seleccionar tecnologías"
+                                />
+                            )}
+                            renderTags={(value, getTagProps) =>
+                                value.map((option, index) => (
+                                    <Chip
+                                        label={option.nombre_tec}
+                                        {...getTagProps({ index })}
+                                        size="small"
+                                    />
+                                ))
+                            }
+                        />
+
                         <TextField
                             label="URL Repositorio (GitHub)"
                             name="link_github"
