@@ -5,15 +5,21 @@ export const getAllProjects = async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT p.*, tp.descripcion as categoria_nombre,
-             array_agg(json_build_object('id', t.id, 'nombre', t.nombre_tec, 'imagen', t.imagen)) as tecnologias
+             array_agg(DISTINCT jsonb_build_object('id', t.id, 'nombre', t.nombre_tec, 'imagen', t.imagen)) FILTER (WHERE t.id IS NOT NULL) as tecnologias,
+             array_agg(DISTINCT pi.url_imagen) FILTER (WHERE pi.url_imagen IS NOT NULL) as imagenes_adicionales
       FROM proyecto p
       LEFT JOIN tipo_proyecto tp ON p.categoria_id = tp.id_categoria
       LEFT JOIN proyecto_tecnologia pt ON p.id_proyect = pt.id_proyecto
       LEFT JOIN tecnologia t ON pt.id_tecnologia = t.id
+      LEFT JOIN proyecto_imagenes pi ON p.id_proyect = pi.id_proyecto
       WHERE p.baja = 'NO'
       GROUP BY p.id_proyect, tp.descripcion
       ORDER BY p.destacado DESC, p.id_proyect DESC
     `);
+
+    if (result.rows.length > 0) {
+      console.log('Sample project from getAllProjects:', result.rows[0]);
+    }
 
     res.json(result.rows);
   } catch (error) {
@@ -27,7 +33,7 @@ export const getFeaturedProjects = async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT p.*, tp.descripcion as categoria_nombre,
-             array_agg(json_build_object('id', t.id, 'nombre', t.nombre_tec, 'imagen', t.imagen)) as tecnologias
+             array_agg(DISTINCT jsonb_build_object('id', t.id, 'nombre', t.nombre_tec, 'imagen', t.imagen)) FILTER (WHERE t.id IS NOT NULL) as tecnologias
       FROM proyecto p
       LEFT JOIN tipo_proyecto tp ON p.categoria_id = tp.id_categoria
       LEFT JOIN proyecto_tecnologia pt ON p.id_proyect = pt.id_proyecto
@@ -48,14 +54,22 @@ export const getFeaturedProjects = async (req, res) => {
 export const getProjectById = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log('getProjectById ID received:', id, typeof id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+
 
     const result = await pool.query(`
       SELECT p.*, tp.descripcion as categoria_nombre,
-             array_agg(json_build_object('id', t.id, 'nombre', t.nombre_tec, 'imagen', t.imagen)) as tecnologias
+             array_agg(DISTINCT jsonb_build_object('id', t.id, 'nombre', t.nombre_tec, 'imagen', t.imagen)) FILTER (WHERE t.id IS NOT NULL) as tecnologias,
+             array_agg(DISTINCT jsonb_build_object('id', pi.id, 'url', pi.url_imagen)) FILTER (WHERE pi.id IS NOT NULL) as imagenes_adicionales
       FROM proyecto p
       LEFT JOIN tipo_proyecto tp ON p.categoria_id = tp.id_categoria
       LEFT JOIN proyecto_tecnologia pt ON p.id_proyect = pt.id_proyecto
       LEFT JOIN tecnologia t ON pt.id_tecnologia = t.id
+      LEFT JOIN proyecto_imagenes pi ON p.id_proyect = pi.id_proyecto
       WHERE p.id_proyect = $1 AND p.baja = 'NO'
       GROUP BY p.id_proyect, tp.descripcion
     `, [id]);
@@ -76,7 +90,7 @@ export const createProject = async (req, res) => {
   const client = await pool.connect();
   
   try {
-    const { name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, tecnologias } = req.body;
+    const { name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, tecnologias, video_url, imagenes_adicionales } = req.body;
 
     if (!name_proyect || !descripcion || !categoria_id) {
       return res.status(400).json({ 
@@ -89,10 +103,10 @@ export const createProject = async (req, res) => {
 
     // Insertar proyecto
     const projectResult = await client.query(`
-      INSERT INTO proyecto (name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO proyecto (name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, video_url)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
-    `, [name_proyect, descripcion, categoria_id, link_github || null, link_web || null, imagen || '', destacado || 'NO']);
+    `, [name_proyect, descripcion, categoria_id, link_github || null, link_web || null, imagen || '', destacado || 'NO', video_url || null]);
 
     const newProject = projectResult.rows[0];
 
@@ -103,6 +117,16 @@ export const createProject = async (req, res) => {
           INSERT INTO proyecto_tecnologia (id_proyecto, id_tecnologia)
           VALUES ($1, $2)
         `, [newProject.id_proyect, techId]);
+      }
+    }
+
+    // Insertar imágenes adicionales si se proporcionaron
+    if (imagenes_adicionales && Array.isArray(imagenes_adicionales) && imagenes_adicionales.length > 0) {
+      for (const imgUrl of imagenes_adicionales) {
+        await client.query(`
+          INSERT INTO proyecto_imagenes (id_proyecto, url_imagen)
+          VALUES ($1, $2)
+        `, [newProject.id_proyect, imgUrl]);
       }
     }
 
@@ -128,7 +152,10 @@ export const updateProject = async (req, res) => {
   
   try {
     const { id } = req.params;
-    const { name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, tecnologias } = req.body;
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+    const { name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, tecnologias, video_url, imagenes_adicionales } = req.body;
 
     await client.query('BEGIN');
 
@@ -136,10 +163,10 @@ export const updateProject = async (req, res) => {
     const result = await client.query(`
       UPDATE proyecto 
       SET name_proyect = $1, descripcion = $2, categoria_id = $3, 
-          link_github = $4, link_web = $5, imagen = $6, destacado = $7
-      WHERE id_proyect = $8 AND baja = 'NO'
+          link_github = $4, link_web = $5, imagen = $6, destacado = $7, video_url = $8
+      WHERE id_proyect = $9 AND baja = 'NO'
       RETURNING *
-    `, [name_proyect, descripcion, categoria_id, link_github || null, link_web || null, imagen || '', destacado || 'NO', id]);
+    `, [name_proyect, descripcion, categoria_id || 1, link_github || null, link_web || null, imagen || '', destacado || 'NO', video_url || null, id]);
 
     if (result.rows.length === 0) {
       await client.query('ROLLBACK');
@@ -157,6 +184,20 @@ export const updateProject = async (req, res) => {
           INSERT INTO proyecto_tecnologia (id_proyecto, id_tecnologia)
           VALUES ($1, $2)
         `, [id, techId]);
+      }
+    }
+
+    // Actualizar imágenes adicionales si se proporcionaron
+    if (imagenes_adicionales && Array.isArray(imagenes_adicionales)) {
+      // Eliminar imágenes existentes (podríamos hacer algo más inteligente aquí, pero esto es simple y efectivo)
+      await client.query('DELETE FROM proyecto_imagenes WHERE id_proyecto = $1', [id]);
+      
+      // Insertar nuevas imágenes
+      for (const imgUrl of imagenes_adicionales) {
+        await client.query(`
+          INSERT INTO proyecto_imagenes (id_proyecto, url_imagen)
+          VALUES ($1, $2)
+        `, [id, imgUrl]);
       }
     }
 

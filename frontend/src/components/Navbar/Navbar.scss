@@ -18,6 +18,12 @@
   align-items: center;
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .nav-logo {
   color: #ff0077;
   font-size: 1.6rem;
@@ -44,6 +50,61 @@
 }
 
 /* ============================
+   ADMIN ACCESS - SEMI OCULTO
+============================ */
+.admin-access {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 0, 119, 0.1);
+  border: 1px solid rgba(255, 0, 119, 0.3);
+  border-radius: 50%;
+  color: #ff0077;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+  flex-shrink: 0;
+
+  i {
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  // Más visible al hacer hover en el navbar
+  .navbar:hover & {
+    opacity: 0.7;
+  }
+
+  &:hover {
+    opacity: 1 !important;
+    color: #fff !important;
+    border-color: #ff0077;
+    background: rgba(255, 0, 119, 0.2);
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgba(255, 0, 119, 0.4);
+  }
+
+  // Efecto de "pulso" sutil cuando está visible
+  &:hover i {
+    animation: pulse-admin 1.5s infinite;
+  }
+}
+
+@keyframes pulse-admin {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* ============================
    RESPONSIVE
 ============================ */
 
@@ -54,5 +115,43 @@
     a {
       font-size: 1rem;
     }
+  }
+
+  .admin-access {
+    width: 32px;
+    height: 32px;
+
+    i {
+      font-size: 0.9rem;
+    }
+
+    // En móvil, mantener visible
+    opacity: 0.6;
+
+    .navbar:hover & {
+      opacity: 0.8;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 15px;
+  }
+
+  .nav-logo {
+    font-size: 1.3rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+
+    a {
+      font-size: 0.95rem;
+    }
+  }
+
+  .admin-access {
+    right: 15px;
   }
 }

@@ -19,7 +19,6 @@ export const getAllEducation = async (req, res) => {
 export const getEducationById = async (req, res) => {
   try {
     const { id } = req.params;
-
     const result = await pool.query('SELECT * FROM educacion WHERE id = $1', [id]);
 
     if (result.rows.length === 0) {
@@ -36,20 +35,29 @@ export const getEducationById = async (req, res) => {
 // Crear educación
 export const createEducation = async (req, res) => {
   try {
-    const { nombre, descripcion, cant_horas } = req.body;
+    console.log('Create Education Request Body:', req.body);
+    const { titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso, certificado_url } = req.body;
 
-    if (!nombre || !descripcion) {
+    if (!titulo || !institucion) {
       return res.status(400).json({ 
         error: 'Datos incompletos', 
-        message: 'Nombre y descripción son requeridos' 
+        message: 'Título e institución son requeridos' 
       });
     }
 
     const result = await pool.query(`
-      INSERT INTO educacion (nombre, descripcion, cant_horas, certificado)
-      VALUES ($1, $2, $3, NULL)
+      INSERT INTO educacion (titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso, certificado_url)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
-    `, [nombre, descripcion, cant_horas || null]);
+    `, [
+      titulo, 
+      institucion, 
+      descripcion || null, 
+      fecha_inicio || null, 
+      fecha_fin || null, 
+      en_curso || 'NO',
+      certificado_url || null
+    ]);
 
     res.status(201).json({
       message: 'Educación creada exitosamente',
@@ -66,14 +74,30 @@ export const createEducation = async (req, res) => {
 export const updateEducation = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, descripcion, cant_horas } = req.body;
+    const { titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso, certificado_url } = req.body;
 
     const result = await pool.query(`
       UPDATE educacion 
-      SET nombre = $1, descripcion = $2, cant_horas = $3
-      WHERE id = $4
+      SET titulo = $1, 
+          institucion = $2, 
+          descripcion = $3, 
+          fecha_inicio = $4, 
+          fecha_fin = $5, 
+          en_curso = $6,
+          certificado_url = $7,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $8
       RETURNING *
-    `, [nombre, descripcion, cant_horas || null, id]);
+    `, [
+      titulo, 
+      institucion, 
+      descripcion || null, 
+      fecha_inicio || null, 
+      fecha_fin || null, 
+      en_curso || 'NO', 
+      certificado_url || null,
+      id
+    ]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Educación no encontrada' });
@@ -101,11 +125,7 @@ export const deleteEducation = async (req, res) => {
       return res.status(404).json({ error: 'Educación no encontrada' });
     }
 
-    res.json({
-      message: 'Educación eliminada exitosamente',
-      education: result.rows[0]
-    });
-
+    res.json({ message: 'Educación eliminada exitosamente' });
   } catch (error) {
     console.error('Error al eliminar educación:', error);
     res.status(500).json({ error: 'Error del servidor', message: error.message });

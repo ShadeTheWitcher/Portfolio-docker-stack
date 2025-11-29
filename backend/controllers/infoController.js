@@ -9,28 +9,32 @@ export const getInfo = async (req, res) => {
 
     if (result.rows.length === 0) {
       return res.json({
-        sobre_mi: '',
-        correo: '',
-        link_telegram: '',
-        link_linkedin: '',
-        skills: '',
-        imagen_perfil: '',
-        cv_pdf: null
+        nombre: '',
+        apellido: '',
+        email: '',
+        telefono: '',
+        linkedin: '',
+        github: '',
+        descripcion: '',
+        cv_url: '',
+        imagen_perfil: ''
       });
     }
 
     const info = result.rows[0];
     
-    // No enviar el BYTEA del CV, solo indicar si existe
     res.json({
       id: info.id,
-      sobre_mi: info.sobre_mi,
-      correo: info.correo,
-      link_telegram: info.link_telegram,
-      link_linkedin: info.link_linkedin,
-      skills: info.skills,
-      imagen_perfil: info.imagen_perfil,
-      has_cv: info.cv_pdf !== null
+      nombre: info.nombre,
+      apellido: info.apellido,
+      email: info.correo, // Mapeo correo -> email
+      telefono: info.telefono,
+      linkedin: info.link_linkedin, // Mapeo link_linkedin -> linkedin
+      github: info.github,
+      descripcion: info.sobre_mi, // Mapeo sobre_mi -> descripcion
+      texto_home: info.texto_home,
+      cv_url: info.cv_url,
+      imagen_perfil: info.imagen_perfil
     });
 
   } catch (error) {
@@ -42,7 +46,18 @@ export const getInfo = async (req, res) => {
 // Actualizar información personal
 export const updateInfo = async (req, res) => {
   try {
-    const { sobre_mi, correo, link_telegram, link_linkedin, skills, imagen_perfil } = req.body;
+    const { 
+      nombre, 
+      apellido, 
+      email, 
+      telefono, 
+      linkedin, 
+      github, 
+      descripcion, 
+      texto_home,
+      cv_url,
+      imagen_perfil
+    } = req.body;
 
     // Verificar si existe un registro
     const checkResult = await pool.query('SELECT id FROM info_laboral LIMIT 1');
@@ -52,18 +67,52 @@ export const updateInfo = async (req, res) => {
     if (checkResult.rows.length === 0) {
       // Crear nuevo registro
       result = await pool.query(`
-        INSERT INTO info_laboral (cv_pdf, sobre_mi, correo, link_telegram, link_linkedin, skills, imagen_perfil)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO info_laboral (
+          nombre, apellido, correo, telefono, link_linkedin, github, sobre_mi, texto_home, cv_url, imagen_perfil
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING *
-      `, ['', sobre_mi || '', correo || '', link_telegram || '', link_linkedin || '', skills || '', imagen_perfil || '']);
+      `, [
+        nombre || '', 
+        apellido || '', 
+        email || '', 
+        telefono || '', 
+        linkedin || '', 
+        github || '', 
+        descripcion || '', 
+        texto_home || '',
+        cv_url || '',
+        imagen_perfil || ''
+      ]);
     } else {
       // Actualizar registro existente
       result = await pool.query(`
         UPDATE info_laboral 
-        SET sobre_mi = $1, correo = $2, link_telegram = $3, link_linkedin = $4, skills = $5, imagen_perfil = $6
-        WHERE id = $7
+        SET nombre = $1, 
+            apellido = $2, 
+            correo = $3, 
+            telefono = $4, 
+            link_linkedin = $5, 
+            github = $6, 
+            sobre_mi = $7, 
+            texto_home = $8,
+            cv_url = $9,
+            imagen_perfil = $10
+        WHERE id = $11
         RETURNING *
-      `, [sobre_mi || '', correo || '', link_telegram || '', link_linkedin || '', skills || '', imagen_perfil || '', checkResult.rows[0].id]);
+      `, [
+        nombre || '', 
+        apellido || '', 
+        email || '', 
+        telefono || '', 
+        linkedin || '', 
+        github || '', 
+        descripcion || '', 
+        texto_home || '',
+        cv_url || '',
+        imagen_perfil || '',
+        checkResult.rows[0].id
+      ]);
     }
 
     const info = result.rows[0];
@@ -72,13 +121,15 @@ export const updateInfo = async (req, res) => {
       message: 'Información actualizada exitosamente',
       info: {
         id: info.id,
-        sobre_mi: info.sobre_mi,
-        correo: info.correo,
-        link_telegram: info.link_telegram,
-        link_linkedin: info.link_linkedin,
-        skills: info.skills,
-        imagen_perfil: info.imagen_perfil,
-        has_cv: info.cv_pdf !== null
+        nombre: info.nombre,
+        apellido: info.apellido,
+        email: info.correo,
+        telefono: info.telefono,
+        linkedin: info.link_linkedin,
+        github: info.github,
+        descripcion: info.sobre_mi,
+        texto_home: info.texto_home,
+        cv_url: info.cv_url
       }
     });
 
