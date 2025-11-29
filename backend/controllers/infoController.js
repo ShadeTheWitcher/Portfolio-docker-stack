@@ -55,7 +55,8 @@ export const updateInfo = async (req, res) => {
       github, 
       descripcion, 
       texto_home,
-      cv_url 
+      cv_url,
+      imagen_perfil
     } = req.body;
 
     // Verificar si existe un registro
@@ -67,9 +68,9 @@ export const updateInfo = async (req, res) => {
       // Crear nuevo registro
       result = await pool.query(`
         INSERT INTO info_laboral (
-          nombre, apellido, correo, telefono, link_linkedin, github, sobre_mi, texto_home, cv_url
+          nombre, apellido, correo, telefono, link_linkedin, github, sobre_mi, texto_home, cv_url, imagen_perfil
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING *
       `, [
         nombre || '', 
@@ -80,7 +81,8 @@ export const updateInfo = async (req, res) => {
         github || '', 
         descripcion || '', 
         texto_home || '',
-        cv_url || ''
+        cv_url || '',
+        imagen_perfil || ''
       ]);
     } else {
       // Actualizar registro existente
@@ -94,8 +96,9 @@ export const updateInfo = async (req, res) => {
             github = $6, 
             sobre_mi = $7, 
             texto_home = $8,
-            cv_url = $9
-        WHERE id = $10
+            cv_url = $9,
+            imagen_perfil = $10
+        WHERE id = $11
         RETURNING *
       `, [
         nombre || '', 
@@ -107,6 +110,7 @@ export const updateInfo = async (req, res) => {
         descripcion || '', 
         texto_home || '',
         cv_url || '',
+        imagen_perfil || '',
         checkResult.rows[0].id
       ]);
     }

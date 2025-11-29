@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import './Profile.scss';
 import {
     Box,
     Button,
     TextField,
     Typography,
-    Paper,
     Grid,
-    Avatar,
     Divider,
     Card,
     CardContent,
@@ -15,7 +14,6 @@ import {
 } from '@mui/material';
 import {
     Save as SaveIcon,
-    Person as PersonIcon,
     Email as EmailIcon,
     Phone as PhoneIcon,
     LinkedIn as LinkedInIcon,
@@ -39,6 +37,7 @@ const Profile = () => {
         descripcion: '',
         texto_home: '',
         cv_url: '',
+        imagen_perfil: '',
     });
 
     useEffect(() => {
@@ -60,6 +59,7 @@ const Profile = () => {
                     descripcion: data.descripcion || '',
                     texto_home: data.texto_home || '',
                     cv_url: data.cv_url || '',
+                    imagen_perfil: data.imagen_perfil || '',
                 });
             }
         } catch (error) {
@@ -111,7 +111,7 @@ const Profile = () => {
     }
 
     return (
-        <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 2, sm: 3 } }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', mx: 'auto', px: { xs: 2, sm: 3, md: 4 } }}>
             {/* Header */}
             <Box sx={{
                 display: 'flex',
@@ -148,33 +148,34 @@ const Profile = () => {
                 </Button>
             </Box>
 
-            <Grid container spacing={3}>
-                {/* Columna Izquierda: Información Básica */}
-                <Grid item xs={12} lg={4}>
+            <Grid container spacing={3} sx={{ justifyContent: { xs: 'center', md: 'flex-start' } }}>
+                {/* Columna Izquierda: Foto de perfil y datos básicos */}
+                <Grid item xs={12} sm={10} md={5} lg={4} xl={4}>
                     <Card sx={{
-                        height: '100%',
                         borderRadius: 3,
                         border: '1px solid rgba(255, 255, 255, 0.12)',
-                        bgcolor: 'background.paper'
+                        bgcolor: 'background.paper',
+                        height: '100%',
+                        maxWidth: { xs: '100%', sm: '600px', md: '100%' },
+                        mx: { xs: 'auto', md: 0 }
                     }}>
                         <CardContent sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'center',
                             p: { xs: 3, sm: 4 }
                         }}>
-                            <Avatar
-                                sx={{
-                                    width: { xs: 100, sm: 120 },
-                                    height: { xs: 100, sm: 120 },
-                                    background: 'linear-gradient(135deg, #ff0077, #7700ff)',
-                                    fontSize: { xs: 42, sm: 50 },
-                                    mb: 2.5,
-                                    boxShadow: '0 8px 24px rgba(119, 0, 255, 0.3)'
-                                }}
-                            >
-                                <PersonIcon fontSize="inherit" />
-                            </Avatar>
+                            {/* Foto de perfil */}
+                            <Box sx={{ mb: 3, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <FileUploader
+                                    value={formData.imagen_perfil}
+                                    onChange={(url) => setFormData((prev) => ({ ...prev, imagen_perfil: url }))}
+                                    label="Foto de Perfil"
+                                    accept="image/*"
+                                    type="image"
+                                    helperText="Click para subir o pegar URL"
+                                />
+                            </Box>
+
                             <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5, textAlign: 'center' }}>
                                 {formData.nombre} {formData.apellido}
                             </Typography>
@@ -182,9 +183,10 @@ const Profile = () => {
                                 {formData.email}
                             </Typography>
 
-                            <Divider sx={{ width: '100%', mb: 3 }} />
+                            <Divider sx={{ mb: 3 }} />
 
-                            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                            {/* Campos básicos */}
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                                 <TextField
                                     label="Nombre"
                                     name="nombre"
@@ -231,148 +233,154 @@ const Profile = () => {
                     </Card>
                 </Grid>
 
-                {/* Columna Derecha: Detalles */}
-                <Grid item xs={12} lg={8}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                {/* Columna Derecha: Tarjetas más pequeñas */}
+                <Grid item xs={12} sm={10} md={7} lg={8} xl={8}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, height: '100%' }}>
 
-                        {/* Contacto */}
-                        <Card sx={{
-                            borderRadius: 3,
-                            border: '1px solid rgba(255, 255, 255, 0.12)',
-                            bgcolor: 'background.paper'
-                        }}>
-                            <CardHeader
-                                title="Información de Contacto"
-                                subheader="Medios para que te contacten"
-                                avatar={<EmailIcon color="primary" sx={{ fontSize: 28 }} />}
-                                titleTypographyProps={{ variant: 'h6', fontWeight: 700 }}
-                                sx={{ pb: 1 }}
-                            />
-                            <Divider />
-                            <CardContent sx={{ pt: 3 }}>
-                                <Grid container spacing={2.5}>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            label="Email"
-                                            name="email"
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            fullWidth
-                                            required
-                                            size="medium"
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <EmailIcon fontSize="small" color="action" />
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
+                        {/* Información de Contacto */}
+                        <Box sx={{ maxWidth: { xs: '100%', sm: '600px', md: '100%' }, mx: { xs: 'auto', md: 0 } }}>
+                            <Card sx={{
+                                borderRadius: 3,
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                bgcolor: 'background.paper'
+                            }}>
+                                <CardHeader
+                                    title="Información de Contacto"
+                                    subheader="Medios para que te contacten"
+                                    avatar={<EmailIcon color="primary" sx={{ fontSize: 28 }} />}
+                                    titleTypographyProps={{ variant: 'h6', fontWeight: 700 }}
+                                    sx={{ pb: 1 }}
+                                />
+                                <Divider />
+                                <CardContent sx={{ pt: 3 }}>
+                                    <Grid container spacing={2.5}>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                label="Email"
+                                                name="email"
+                                                type="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                fullWidth
+                                                required
+                                                size="medium"
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <EmailIcon fontSize="small" color="action" />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                label="Teléfono"
+                                                name="telefono"
+                                                value={formData.telefono}
+                                                onChange={handleChange}
+                                                fullWidth
+                                                size="medium"
+                                                placeholder="+XX XXX XXX XXX"
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <PhoneIcon fontSize="small" color="action" />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            label="Teléfono"
-                                            name="telefono"
-                                            value={formData.telefono}
-                                            onChange={handleChange}
-                                            fullWidth
-                                            size="medium"
-                                            placeholder="+XX XXX XXX XXX"
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <PhoneIcon fontSize="small" color="action" />
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        </Box>
 
                         {/* Redes Sociales */}
-                        <Card sx={{
-                            borderRadius: 3,
-                            border: '1px solid rgba(255, 255, 255, 0.12)',
-                            bgcolor: 'background.paper'
-                        }}>
-                            <CardHeader
-                                title="Redes Sociales"
-                                subheader="Enlaces a tus perfiles profesionales"
-                                avatar={<LinkedInIcon color="primary" sx={{ fontSize: 28 }} />}
-                                titleTypographyProps={{ variant: 'h6', fontWeight: 700 }}
-                                sx={{ pb: 1 }}
-                            />
-                            <Divider />
-                            <CardContent sx={{ pt: 3 }}>
-                                <Grid container spacing={2.5}>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            label="LinkedIn URL"
-                                            name="linkedin"
-                                            value={formData.linkedin}
-                                            onChange={handleChange}
-                                            fullWidth
-                                            size="medium"
-                                            placeholder="https://linkedin.com/in/..."
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <LinkedInIcon fontSize="small" color="action" />
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
+                        <Box sx={{ maxWidth: { xs: '100%', sm: '600px', md: '100%' }, mx: { xs: 'auto', md: 0 } }}>
+                            <Card sx={{
+                                borderRadius: 3,
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                bgcolor: 'background.paper'
+                            }}>
+                                <CardHeader
+                                    title="Redes Sociales"
+                                    subheader="Enlaces a tus perfiles profesionales"
+                                    avatar={<LinkedInIcon color="primary" sx={{ fontSize: 28 }} />}
+                                    titleTypographyProps={{ variant: 'h6', fontWeight: 700 }}
+                                    sx={{ pb: 1 }}
+                                />
+                                <Divider />
+                                <CardContent sx={{ pt: 3 }}>
+                                    <Grid container spacing={2.5}>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                label="LinkedIn URL"
+                                                name="linkedin"
+                                                value={formData.linkedin}
+                                                onChange={handleChange}
+                                                fullWidth
+                                                size="medium"
+                                                placeholder="https://linkedin.com/in/..."
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <LinkedInIcon fontSize="small" color="action" />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                label="GitHub URL"
+                                                name="github"
+                                                value={formData.github}
+                                                onChange={handleChange}
+                                                fullWidth
+                                                size="medium"
+                                                placeholder="https://github.com/..."
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <GitHubIcon fontSize="small" color="action" />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            label="GitHub URL"
-                                            name="github"
-                                            value={formData.github}
-                                            onChange={handleChange}
-                                            fullWidth
-                                            size="medium"
-                                            placeholder="https://github.com/..."
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <GitHubIcon fontSize="small" color="action" />
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        </Box>
 
                         {/* CV */}
-                        <Card sx={{
-                            borderRadius: 3,
-                            border: '1px solid rgba(255, 255, 255, 0.12)',
-                            bgcolor: 'background.paper'
-                        }}>
-                            <CardHeader
-                                title="Curriculum Vitae"
-                                subheader="Sube tu CV en formato PDF o DOC"
-                                avatar={<DescriptionIcon color="primary" sx={{ fontSize: 28 }} />}
-                                titleTypographyProps={{ variant: 'h6', fontWeight: 700 }}
-                                sx={{ pb: 1 }}
-                            />
-                            <Divider />
-                            <CardContent sx={{ pt: 3 }}>
-                                <FileUploader
-                                    value={formData.cv_url}
-                                    onChange={(url) => setFormData((prev) => ({ ...prev, cv_url: url }))}
-                                    label="Archivo de CV"
-                                    accept=".pdf,.doc,.docx"
-                                    type="document"
-                                    helperText="Máximo 5MB. Formatos permitidos: PDF, DOC, DOCX"
+                        <Box sx={{ maxWidth: { xs: '100%', sm: '600px', md: '100%' }, mx: { xs: 'auto', md: 0 } }}>
+                            <Card sx={{
+                                borderRadius: 3,
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                bgcolor: 'background.paper'
+                            }}>
+                                <CardHeader
+                                    title="Curriculum Vitae"
+                                    subheader="Sube tu CV en formato PDF o DOC"
+                                    avatar={<DescriptionIcon color="primary" sx={{ fontSize: 28 }} />}
+                                    titleTypographyProps={{ variant: 'h6', fontWeight: 700 }}
+                                    sx={{ pb: 1 }}
                                 />
-                            </CardContent>
-                        </Card>
+                                <Divider />
+                                <CardContent sx={{ pt: 3 }}>
+                                    <FileUploader
+                                        value={formData.cv_url}
+                                        onChange={(url) => setFormData((prev) => ({ ...prev, cv_url: url }))}
+                                        label="Archivo de CV"
+                                        accept=".pdf,.doc,.docx"
+                                        type="document"
+                                        helperText="Máximo 5MB. Formatos permitidos: PDF, DOC, DOCX"
+                                    />
+                                </CardContent>
+                            </Card>
+                        </Box>
 
                     </Box>
                 </Grid>
