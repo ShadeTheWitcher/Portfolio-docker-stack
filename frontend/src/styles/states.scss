@@ -1,0 +1,33 @@
+// Estados de carga, error y vacío
+.loading-state,
+.error-state,
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+
+    p {
+        font-size: 1.1rem;
+        color: #999;
+    }
+}
+
+.error-state p {
+    color: #ff4444;
+}
+
+.loading-state p {
+    color: #00d9ff;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}

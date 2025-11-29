@@ -1,33 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import './Home.scss';
 import ProjectCard from "../../components/ProjectCard";
 import { calculateFreelanceExperience } from "../../utils/dateUtils";
+import { getFeaturedProjects } from "../../services/projectService";
 
 function Home() {
   // Fecha de inicio como freelance: 1 de Marzo de 2025
   const FREELANCE_START_DATE = new Date(2025, 2, 1);
   const freelanceExp = calculateFreelanceExperience(FREELANCE_START_DATE);
 
-  const proyectos = [
-    {
-      id: 1,
-      name: "Proyecto 1",
-      imagen: "/img/proyecto1.jpg",
-      tecnologias: [{ imagen: "/img/react.png" }],
-      destacado: "SI",
-      link_web: "https://example.com",
-      link_github: "https://github.com"
-    },
-    {
-      id: 2,
-      name: "Proyecto 2",
-      imagen: "/img/proyecto2.jpg",
-      tecnologias: [{ imagen: "/img/node.png" }],
-      destacado: "SI",
-      link_web: "",
-      link_github: "https://github.com"
-    }
-  ];
+  // Estados para proyectos
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Cargar proyectos destacados
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const data = await getFeaturedProjects();
+        setProjects(data);
+        setError(null);
+      } catch (err) {
+        console.error('Error al cargar proyectos:', err);
+        setError('No se pudieron cargar los proyectos');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   return (
     <section className="home-container">
@@ -108,20 +112,40 @@ function Home() {
           <p className="section-subtitle">Algunos de mis trabajos más recientes</p>
         </div>
 
-        <div className="projects-grid">
-          {proyectos
-            .filter((p) => p.destacado === "SI")
-            .map((proyect) => (
-              <ProjectCard key={proyect.id} proyect={proyect} />
-            ))}
-        </div>
+        {loading && (
+          <div className="loading-state">
+            <p>Cargando proyectos...</p>
+          </div>
+        )}
 
-        <div className="center-btn">
-          <a href="/proyectos" className="btn-view-more">
-            Ver Todos los Proyectos
-            <i className="fas fa-arrow-right"></i>
-          </a>
-        </div>
+        {error && (
+          <div className="error-state">
+            <p>{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && projects.length === 0 && (
+          <div className="empty-state">
+            <p>No hay proyectos destacados disponibles</p>
+          </div>
+        )}
+
+        {!loading && !error && projects.length > 0 && (
+          <>
+            <div className="projects-grid">
+              {projects.map((proyect) => (
+                <ProjectCard key={proyect.id_proyect} proyect={proyect} />
+              ))}
+            </div>
+
+            <div className="center-btn">
+              <a href="/proyectos" className="btn-view-more">
+                Ver Todos los Proyectos
+                <i className="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </>
+        )}
       </section>
     </section>
   );
