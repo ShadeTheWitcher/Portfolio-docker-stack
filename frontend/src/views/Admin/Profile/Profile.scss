@@ -1,0 +1,256 @@
+.profile-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 16px;
+
+    @media (min-width: 600px) {
+        padding: 0 24px;
+    }
+
+    @media (min-width: 960px) {
+        padding: 0 32px;
+    }
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-top: 16px;
+
+    @media (min-width: 600px) {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .profile-header-content {
+        .profile-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+
+    .profile-save-button {
+        border-radius: 8px;
+        padding: 10px 32px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        min-width: 100%;
+
+        @media (min-width: 600px) {
+            min-width: auto;
+        }
+    }
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    justify-content: center;
+
+    @media (min-width: 960px) {
+        grid-template-columns: 5fr 7fr;
+        justify-content: flex-start;
+    }
+
+    @media (min-width: 1280px) {
+        grid-template-columns: 4fr 8fr;
+    }
+}
+
+.profile-card {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: var(--mui-palette-background-paper);
+    height: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+
+    @media (min-width: 600px) {
+        max-width: 600px;
+    }
+
+    @media (min-width: 960px) {
+        max-width: 100%;
+        margin: 0;
+    }
+}
+
+.profile-left-card {
+    .profile-card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 24px;
+
+        @media (min-width: 600px) {
+            padding: 32px;
+        }
+    }
+
+    .profile-avatar-section {
+        margin-bottom: 24px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        text-align: center;
+    }
+
+    .profile-email {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    .profile-divider {
+        width: 100%;
+        margin-bottom: 24px;
+    }
+
+    .profile-fields {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.profile-right-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 100%;
+
+    .profile-info-card {
+        max-width: 100%;
+        margin: 0 auto;
+
+        @media (min-width: 600px) {
+            max-width: 600px;
+        }
+
+        @media (min-width: 960px) {
+            max-width: 100%;
+            margin: 0;
+        }
+    }
+}
+
+.profile-section-card {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: var(--mui-palette-background-paper);
+
+    .profile-card-header {
+        padding-bottom: 8px;
+
+        .profile-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .profile-card-icon {
+            font-size: 28px;
+        }
+    }
+
+    .profile-card-content {
+        padding-top: 24px;
+    }
+}
+
+.profile-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+
+    .profile-loading-text {
+        font-size: 1.25rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+// Estilos específicos para campos de formulario
+.profile-text-field {
+    .MuiOutlinedInput-root {
+        &:hover .MuiOutlinedInput-notchedOutline {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        &.Mui-focused .MuiOutlinedInput-notchedOutline {
+            border-color: var(--mui-palette-primary-main);
+        }
+    }
+}
+
+// Grid de contacto y redes sociales
+.profile-contact-grid,
+.profile-social-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 600px) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+// Animaciones
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-card,
+.profile-section-card {
+    animation: fadeIn 0.3s ease-out;
+}
+
+// Responsive utilities
+@media (max-width: 599px) {
+    .profile-header {
+        .profile-title {
+            font-size: 1.75rem;
+        }
+    }
+
+    .profile-left-card {
+        .profile-name {
+            font-size: 1.25rem;
+        }
+    }
+}
+
+// Mejoras visuales para modo oscuro
+@media (prefers-color-scheme: dark) {
+
+    .profile-card,
+    .profile-section-card {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+}

@@ -1,0 +1,615 @@
+.about-container {
+  min-height: 100vh;
+  background: #0f0f0f;
+  color: #fff;
+  padding: 4rem 2rem;
+  width: 100%;
+}
+
+/* --------------------------------------
+   HEADER
+-------------------------------------- */
+.about-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInDown 0.6s ease-out;
+
+  .about-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, #ccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .title-underline {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #ff0077, #7700ff);
+    margin: 0 auto;
+    border-radius: 2px;
+  }
+}
+
+/* --------------------------------------
+   PROFILE & BIO WRAPPER
+-------------------------------------- */
+.profile-bio-wrapper {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  animation: fadeInUp 0.8s ease-out;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Profile Card */
+.profile-card {
+  background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+  border: 2px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #ff0077;
+    box-shadow: 0 10px 40px rgba(255, 0, 119, 0.15);
+  }
+
+  .profile-image-wrapper {
+    position: relative;
+    width: 180px;
+    height: 180px;
+
+    .profile-image,
+    .profile-placeholder {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #2a2a2a;
+      transition: all 0.3s ease;
+    }
+
+    .profile-placeholder {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        font-size: 4rem;
+        color: #444;
+      }
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff0077, #7700ff);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover::after {
+      opacity: 0.3;
+    }
+
+    &:hover .profile-image,
+    &:hover .profile-placeholder {
+      transform: scale(1.05);
+      border-color: #ff0077;
+    }
+  }
+
+  .profile-info {
+    text-align: center;
+    width: 100%;
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .profile-badges {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+
+      .badge {
+        background: rgba(255, 0, 119, 0.1);
+        border: 1px solid rgba(255, 0, 119, 0.3);
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #ccc;
+        transition: all 0.3s ease;
+
+        i {
+          color: #ff0077;
+          font-size: 1.1rem;
+        }
+
+        &:hover {
+          background: rgba(255, 0, 119, 0.2);
+          border-color: #ff0077;
+          transform: translateX(5px);
+        }
+      }
+    }
+  }
+}
+
+/* Bio Card */
+.bio-card {
+  background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+  border: 2px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #7700ff;
+    box-shadow: 0 10px 40px rgba(119, 0, 255, 0.15);
+  }
+
+  .bio-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #fff;
+
+    i {
+      color: #7700ff;
+    }
+  }
+
+  .bio-text {
+    font-size: 1.1rem;
+    color: #aaa;
+    line-height: 1.8;
+    flex: 1;
+  }
+
+  .bio-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .contact-cta-button,
+    .cv-download-button {
+      flex: 1;
+      min-width: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.9rem 1.5rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .contact-cta-button {
+      background: linear-gradient(135deg, #ff0077, #7700ff);
+      border: none;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(255, 0, 119, 0.3);
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 0, 119, 0.5);
+      }
+    }
+
+    .cv-download-button {
+      background: transparent;
+      border: 2px solid #00f2ff;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 242, 255, 0.1);
+
+      i {
+        font-size: 1.1rem;
+      }
+
+      &:hover {
+        background: #00f2ff;
+        color: #000;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 242, 255, 0.3);
+      }
+    }
+  }
+}
+
+/* --------------------------------------
+   SKILLS & EDUCATION GRID
+-------------------------------------- */
+.skills-education-grid {
+  display: grid;
+  grid-template-columns: 1fr 450px;
+  gap: 2rem;
+  animation: fadeIn 1s ease-out;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Skills Section */
+.skills-section {
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    i {
+      color: #ff0077;
+    }
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+
+    .skill-card {
+      background: #1a1a1a;
+      border: 2px solid #2a2a2a;
+      padding: 1.2rem 0.8rem;
+      border-radius: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: #ff0077;
+        transform: translateY(-5px);
+        background: linear-gradient(135deg, rgba(255, 0, 119, 0.1), rgba(119, 0, 255, 0.1));
+        box-shadow: 0 8px 20px rgba(255, 0, 119, 0.2);
+      }
+
+      .skill-icon {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+      }
+
+      .skill-name {
+        font-weight: 600;
+        color: #ccc;
+        font-size: 0.9rem;
+      }
+
+      .skill-level {
+        color: #888;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+/* Education Section */
+.education-section {
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    i {
+      color: #7700ff;
+    }
+  }
+
+  .education-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .education-item {
+      position: relative;
+      padding-left: 2rem;
+
+      .education-dot {
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 14px;
+        height: 14px;
+        background: linear-gradient(135deg, #ff0077, #7700ff);
+        border-radius: 50%;
+        box-shadow: 0 0 12px rgba(255, 0, 119, 0.6);
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 22px;
+        width: 2px;
+        height: calc(100% + 1.5rem);
+        background: linear-gradient(180deg, #ff0077, #7700ff);
+        opacity: 0.3;
+      }
+
+      &:last-child::before {
+        display: none;
+      }
+
+      .education-content {
+        background: #1a1a1a;
+        border: 2px solid #2a2a2a;
+        padding: 1.2rem 1.4rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+
+        h4 {
+          font-size: 1.1rem;
+          margin-bottom: 0.4rem;
+          color: #fff;
+          font-weight: 600;
+        }
+
+        .education-date {
+          font-size: 0.85rem;
+          color: #ff0077;
+          font-weight: 600;
+          display: block;
+          margin-bottom: 0.4rem;
+        }
+
+        .education-institution {
+          color: #aaa;
+          font-size: 0.95rem;
+          margin: 0;
+        }
+
+        .education-description {
+          font-size: 0.9rem;
+          color: #888;
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
+          line-height: 1.5;
+        }
+
+        .education-certificate-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: #ff0077;
+          font-size: 0.9rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          margin-top: 0.8rem;
+          padding: 0.4rem 0.8rem;
+          background: rgba(255, 0, 119, 0.1);
+          border-radius: 6px;
+
+          i {
+            font-size: 1rem;
+          }
+
+          &:hover {
+            background: rgba(255, 0, 119, 0.2);
+            transform: translateX(5px);
+          }
+        }
+
+        &:hover {
+          border-color: #7700ff;
+          transform: translateX(8px);
+          box-shadow: 0 8px 20px rgba(119, 0, 255, 0.2);
+        }
+      }
+    }
+  }
+}
+
+/* --------------------------------------
+   SOCIAL LINKS
+-------------------------------------- */
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  animation: fadeIn 1.2s ease-out;
+
+  .social-link {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    border: 2px solid #2a2a2a;
+    border-radius: 50%;
+    color: #ccc;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+
+    &:hover {
+      border-color: #ff0077;
+      background: linear-gradient(135deg, rgba(255, 0, 119, 0.2), rgba(119, 0, 255, 0.2));
+      color: #fff;
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 8px 20px rgba(255, 0, 119, 0.3);
+    }
+  }
+}
+
+/* --------------------------------------
+   LOADING & ERROR STATES
+-------------------------------------- */
+.loading-state,
+.error-state {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #2a2a2a;
+    border-top-color: #ff0077;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  i {
+    font-size: 3rem;
+    color: #ff0077;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #aaa;
+  }
+}
+
+/* --------------------------------------
+   ANIMATIONS
+-------------------------------------- */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------
+   RESPONSIVE
+-------------------------------------- */
+@media (max-width: 1200px) {
+  .skills-education-grid {
+    grid-template-columns: 1fr 400px;
+  }
+}
+
+@media (max-width: 992px) {
+  .profile-bio-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-education-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .education-section {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-container {
+    padding: 3rem 1rem;
+  }
+
+  .about-header .about-title {
+    font-size: 2rem;
+  }
+
+  .profile-card {
+    padding: 1.5rem;
+  }
+
+  .bio-card {
+    padding: 1.5rem;
+
+    .bio-text {
+      font-size: 1rem;
+    }
+
+    .bio-actions {
+      flex-direction: column;
+    }
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card .profile-image-wrapper {
+    width: 150px;
+    height: 150px;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)) !important;
+  }
+}

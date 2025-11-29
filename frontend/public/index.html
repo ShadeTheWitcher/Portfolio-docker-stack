@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React + Node + Docker</title>
-  </head>
-  <body>
-    <div id="root"></div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Shade</title>
+  <link id="app-favicon" rel="icon" href="%PUBLIC_URL%/favicon-normal.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <script>
+    // Lógica para cambiar el favicon en Navidad (Diciembre)
+    (function () {
+      const today = new Date();
+      const isChristmasSeason = today.getMonth() === 11; // 11 es Diciembre en JS
+
+      if (isChristmasSeason) {
+        const link = document.getElementById('app-favicon');
+        if (link) {
+          link.href = '%PUBLIC_URL%/favicon-xmas.png';
+        }
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
 
   <!-- Cargar las variables dinámicas -->
   <script src="/config.js"></script>
 
+  <!-- Aquí se cargan los scripts de React -->
+</body>
 
-    <!-- Aquí se cargan los scripts de React (build/static/js/main.js, etc.) -->
-  </body>
 </html>
