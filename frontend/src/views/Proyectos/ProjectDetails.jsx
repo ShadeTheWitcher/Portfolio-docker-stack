@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProjectById } from '../../services/projectService';
+import ImageLightbox from '../../components/ImageLightbox';
 import './ProjectDetails.scss';
 
 const ProjectDetails = () => {
@@ -10,6 +11,8 @@ const ProjectDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(0);
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -57,6 +60,31 @@ const ProjectDetails = () => {
     };
 
     const youtubeId = getYoutubeId(project.video_url);
+
+    const handleImageClick = (index) => {
+        setLightboxIndex(index);
+        setLightboxOpen(true);
+    };
+
+    const handleLightboxClose = () => {
+        setLightboxOpen(false);
+    };
+
+    const handleLightboxNext = () => {
+        if (project.imagenes_adicionales) {
+            setLightboxIndex((prev) =>
+                prev === project.imagenes_adicionales.length - 1 ? 0 : prev + 1
+            );
+        }
+    };
+
+    const handleLightboxPrev = () => {
+        if (project.imagenes_adicionales) {
+            setLightboxIndex((prev) =>
+                prev === 0 ? project.imagenes_adicionales.length - 1 : prev - 1
+            );
+        }
+    };
 
     return (
         <div className="project-details-container">
@@ -127,7 +155,7 @@ const ProjectDetails = () => {
                                     <div
                                         key={index}
                                         className="gallery-item"
-                                        onClick={() => window.open(img.url, '_blank')}
+                                        onClick={() => handleImageClick(index)}
                                     >
                                         <img src={img.url} alt={`Screenshot ${index + 1}`} />
                                     </div>
@@ -144,6 +172,16 @@ const ProjectDetails = () => {
                     </div>
                 </div>
             </div>
+
+            {lightboxOpen && project.imagenes_adicionales && (
+                <ImageLightbox
+                    images={project.imagenes_adicionales}
+                    currentIndex={lightboxIndex}
+                    onClose={handleLightboxClose}
+                    onNext={handleLightboxNext}
+                    onPrev={handleLightboxPrev}
+                />
+            )}
         </div>
     );
 };
