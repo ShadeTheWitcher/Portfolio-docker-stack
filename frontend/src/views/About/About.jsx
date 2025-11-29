@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './About.scss';
 import { getInfo } from '../../services/infoService';
 import { getSkills } from '../../services/techService';
 import { getAllEducation } from '../../services/educationService';
 
 const About = () => {
+  const navigate = useNavigate();
   const [info, setInfo] = useState(null);
   const [skills, setSkills] = useState([]);
   const [education, setEducation] = useState([]);
@@ -36,10 +38,15 @@ const About = () => {
     fetchData();
   }, []);
 
+  const handleContactClick = () => {
+    navigate('/contacto');
+  };
+
   if (loading) {
     return (
       <section className="about-container">
         <div className="loading-state">
+          <div className="spinner"></div>
           <p>Cargando información...</p>
         </div>
       </section>
@@ -50,6 +57,7 @@ const About = () => {
     return (
       <section className="about-container">
         <div className="error-state">
+          <i className="fas fa-exclamation-circle"></i>
           <p>{error}</p>
         </div>
       </section>
@@ -58,13 +66,15 @@ const About = () => {
 
   return (
     <section className="about-container">
+      {/* Header */}
       <div className="about-header">
         <h1 className="about-title">Sobre Mí</h1>
         <div className="title-underline"></div>
       </div>
 
-      <div className="about-content">
-        <div className="profile-section">
+      {/* Profile & Bio */}
+      <div className="profile-bio-wrapper">
+        <div className="profile-card">
           <div className="profile-image-wrapper">
             {info?.imagen_perfil ? (
               <img
@@ -77,113 +87,111 @@ const About = () => {
                 <i className="fas fa-user"></i>
               </div>
             )}
-            <div className="profile-decoration"></div>
           </div>
 
-          <div className="profile-stats">
-            <div className="stat-badge">
-              <i className="fas fa-code"></i>
-              <span>Full Stack Developer</span>
-            </div>
-            <div className="stat-badge">
-              <i className="fas fa-map-marker-alt"></i>
-              <span>Argentina</span>
+          <div className="profile-info">
+            <h2 className="profile-name">Lovato Matias</h2>
+            <div className="profile-badges">
+              <span className="badge">
+                <i className="fas fa-code"></i>
+                Full Stack Developer
+              </span>
+              <span className="badge">
+                <i className="fas fa-map-marker-alt"></i>
+                Argentina
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="bio-section">
-          {info?.sobre_mi ? (
-            <p className="bio-text">{info.sobre_mi}</p>
-          ) : (
-            <p className="bio-text">
-              Desarrollador Full Stack apasionado por crear experiencias web modernas y funcionales.
-            </p>
-          )}
+        <div className="bio-card">
+          <h3 className="bio-title">
+            <i className="fas fa-user-circle"></i>
+            Acerca de
+          </h3>
+          <p className="bio-text">
+            {info?.sobre_mi ||
+              'Desarrollador Full Stack apasionado por crear experiencias web modernas y funcionales.'}
+          </p>
+
+          <button onClick={handleContactClick} className="contact-cta-button">
+            <i className="fas fa-paper-plane"></i>
+            Contáctame
+          </button>
         </div>
       </div>
 
-      {/* Skills Section */}
-      {skills.length > 0 && (
-        <div className="skills-section">
-          <h2 className="section-title">
-            <i className="fas fa-tools"></i>
-            Habilidades Técnicas
-          </h2>
-          <div className="skills-grid">
-            {skills.map((skill) => (
-              <div key={skill.id} className="skill-card">
-                {skill.imagen && (
-                  <img src={skill.imagen} alt={skill.nombre_tec} className="skill-icon" />
-                )}
-                <span className="skill-name">{skill.nombre_tec}</span>
-                {skill.nivel_nombre && (
-                  <span className="skill-level">{skill.nivel_nombre}</span>
-                )}
+      {/* Skills & Education Grid */}
+      <div className="skills-education-grid">
+        {/* Skills Section */}
+        {skills.length > 0 && (
+          <div className="skills-section">
+            <h3 className="section-title">
+              <i className="fas fa-tools"></i>
+              Habilidades Técnicas
+            </h3>
+            <div className="skills-grid">
+              {skills.map((skill) => (
+                <div key={skill.id} className="skill-card">
+                  {skill.imagen && (
+                    <img src={skill.imagen} alt={skill.nombre_tec} className="skill-icon" />
+                  )}
+                  <span className="skill-name">{skill.nombre_tec}</span>
+                  {skill.nivel_nombre && (
+                    <span className="skill-level">{skill.nivel_nombre}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Education Section */}
+        <div className="education-section">
+          <h3 className="section-title">
+            <i className="fas fa-graduation-cap"></i>
+            Educación
+          </h3>
+          <div className="education-list">
+            <div className="education-item">
+              <div className="education-dot"></div>
+              <div className="education-content">
+                <h4>Licenciatura en Sistemas de Información</h4>
+                <span className="education-date">2021 - Actualidad</span>
+                <p className="education-institution">Universidad Nacional del Nordeste</p>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            </div>
 
-      {/* Education Section */}
-      <div className="education-section">
-        <h3>Educación</h3>
-
-        <div className="timeline">
-
-          {/* Evento 1 */}
-          <div className="timeline-item">
-            <div className="timeline-dot"></div>
-
-            <div className="timeline-card">
-              <h4>Licenciatura en Sistemas de Información</h4>
-              <span className="timeline-date">2021 - Actualidad</span>
-              <p>Universidad Nacional del Nordeste</p>
+            <div className="education-item">
+              <div className="education-dot"></div>
+              <div className="education-content">
+                <h4>Bachiller en Economía y Administración</h4>
+                <span className="education-date">2016 - 2020</span>
+                <p className="education-institution">Colegio Secundario Manuel Belgrano</p>
+              </div>
             </div>
           </div>
-
-          {/* Evento 2 */}
-          <div className="timeline-item">
-            <div className="timeline-dot"></div>
-
-            <div className="timeline-card">
-              <h4>Bachiller en Economía y Administración</h4>
-              <span className="timeline-date">2016 - 2020</span>
-              <p>Colegio Secundario Manuel Belgrano</p>
-            </div>
-          </div>
-
         </div>
       </div>
 
-      {/* Contact Info */}
-      {info && (
-        <div className="contact-info-section">
-          <h2 className="section-title">
-            <i className="fas fa-envelope"></i>
-            Información de Contacto
-          </h2>
-          <div className="contact-grid">
-            {info.correo && (
-              <a href={`mailto:${info.correo}`} className="contact-item">
-                <i className="fas fa-envelope"></i>
-                <span>{info.correo}</span>
-              </a>
-            )}
-            {info.link_linkedin && (
-              <a href={info.link_linkedin} target="_blank" rel="noopener noreferrer" className="contact-item">
-                <i className="fab fa-linkedin"></i>
-                <span>LinkedIn</span>
-              </a>
-            )}
-            {info.link_telegram && (
-              <a href={info.link_telegram} target="_blank" rel="noopener noreferrer" className="contact-item">
-                <i className="fab fa-telegram"></i>
-                <span>Telegram</span>
-              </a>
-            )}
-          </div>
+      {/* Contact Links (Optional - solo si quieres mostrar los enlaces también) */}
+      {info && (info.correo || info.link_linkedin || info.link_telegram) && (
+        <div className="social-links">
+          {info.correo && (
+            <a href={`mailto:${info.correo}`} className="social-link" title="Email">
+              <i className="fas fa-envelope"></i>
+            </a>
+          )}
+          {info.link_linkedin && (
+            <a href={info.link_linkedin} target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn">
+              <i className="fab fa-linkedin"></i>
+            </a>
+          )}
+          {info.link_telegram && (
+            <a href={info.link_telegram} target="_blank" rel="noopener noreferrer" className="social-link" title="Telegram">
+              <i className="fab fa-telegram"></i>
+            </a>
+          )}
         </div>
       )}
     </section>
