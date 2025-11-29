@@ -10,6 +10,12 @@ import {
     IconButton,
     Chip,
     Typography,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
+    FormControlLabel,
+    Switch,
 } from '@mui/material';
 import {
     Add as AddIcon,
@@ -25,9 +31,11 @@ import {
     updateProject,
     deleteProject,
 } from '../../../services/projectService';
+import { getAllCategories } from '../../../services/categoryService';
 
 const Projects = () => {
     const [projects, setProjects] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [openDialog, setOpenDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -39,10 +47,12 @@ const Projects = () => {
         link_github: '',
         link_web: '',
         imagen: '',
+        destacado: 'NO',
     });
 
     useEffect(() => {
         fetchProjects();
+        fetchCategories();
     }, []);
 
     const fetchProjects = async () => {
@@ -58,6 +68,16 @@ const Projects = () => {
         }
     };
 
+    const fetchCategories = async () => {
+        try {
+            const data = await getAllCategories();
+            setCategories(data);
+        } catch (error) {
+            toast.error('Error al cargar categorías');
+            console.error(error);
+        }
+    };
+
     const handleOpenDialog = (project = null) => {
         if (project) {
             setCurrentProject(project);
@@ -68,16 +88,18 @@ const Projects = () => {
                 link_github: project.link_github || '',
                 link_web: project.link_web || '',
                 imagen: project.imagen || '',
+                destacado: project.destacado || 'NO',
             });
         } else {
             setCurrentProject(null);
             setFormData({
                 name_proyect: '',
                 descripcion: '',
-                categoria_id: 1,
+                categoria_id: categories.length > 0 ? categories[0].id_categoria : 1,
                 link_github: '',
                 link_web: '',
                 imagen: '',
+                destacado: 'NO',
             });
         }
         setOpenDialog(true);
@@ -91,6 +113,11 @@ const Projects = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSwitchChange = (e) => {
+        const { name, checked } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: checked ? 'SI' : 'NO' }));
     };
 
     const handleSubmit = async () => {
@@ -275,6 +302,21 @@ const Projects = () => {
                             multiline
                             rows={3}
                         />
+                        <FormControl fullWidth>
+                            <InputLabel>Categoría</InputLabel>
+                            <Select
+                                name="categoria_id"
+                                value={formData.categoria_id}
+                                onChange={handleChange}
+                                label="Categoría"
+                            >
+                                {categories.map((cat) => (
+                                    <MenuItem key={cat.id_categoria} value={cat.id_categoria}>
+                                        {cat.descripcion}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                         <TextField
                             label="URL Repositorio (GitHub)"
                             name="link_github"
@@ -298,6 +340,26 @@ const Projects = () => {
                             onChange={handleChange}
                             fullWidth
                             placeholder="https://ejemplo.com/imagen.png"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={formData.destacado === 'SI'}
+                                    onChange={handleSwitchChange}
+                                    name="destacado"
+                                    color="primary"
+                                />
+                            }
+                            label={
+                                <Box>
+                                    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                                        Proyecto Destacado
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Los proyectos destacados se mostrarán primero en el portfolio
+                                    </Typography>
+                                </Box>
+                            }
                         />
                     </Box>
                 </DialogContent>
