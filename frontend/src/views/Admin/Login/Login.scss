@@ -171,19 +171,26 @@
 }
 
 .error-message {
-    background: rgba(255, 0, 119, 0.1);
-    border: 1px solid rgba(255, 0, 119, 0.3);
+    background: rgba(255, 59, 48, 0.15);
+    border: 2px solid rgba(255, 59, 48, 0.4);
     border-radius: 10px;
-    padding: 0.9rem 1.2rem;
+    padding: 1rem 1.2rem;
     display: flex;
     align-items: center;
     gap: 0.7rem;
-    color: #ff4d4d;
-    font-size: 0.9rem;
-    animation: shake 0.4s ease-in-out;
+    color: #ff6b6b;
+    font-size: 0.95rem;
+    font-weight: 600;
+    animation: shake 0.4s ease-in-out, fadeIn 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);
 
     i {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    span {
+        line-height: 1.4;
     }
 }
 

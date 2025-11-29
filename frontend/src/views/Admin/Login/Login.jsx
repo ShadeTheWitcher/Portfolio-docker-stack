@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import './Login.scss';
+import { login } from '../../../services/authService';
 
 const Login = () => {
     const [formData, setFormData] = useState({
-        email: '',
+        usuario: '',
         password: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !loading) {
+            e.preventDefault();
+            handleSubmit(null);
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -16,45 +24,59 @@ const Login = () => {
             ...prev,
             [name]: value
         }));
-        // Limpiar error al escribir
         if (error) setError(null);
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
-        // Validación básica
-        if (!formData.email || !formData.password) {
+        if (!formData.usuario || !formData.password) {
             setError('Por favor completa todos los campos');
-            return;
+            return false;
         }
 
-        if (!formData.email.includes('@')) {
-            setError('Por favor ingresa un email válido');
-            return;
-        }
+        setLoading(true);
+        setError(null);
 
         try {
-            setLoading(true);
-            setError(null);
+            const result = await login(formData.usuario, formData.password);
 
-            // Aquí iría tu llamada al servicio de autenticación
-            // Ejemplo: const response = await loginService(formData);
+            if (!result || !result.token) {
+                throw new Error('Respuesta inválida del servidor');
+            }
 
-            // Simulación de login (reemplazar con tu lógica real)
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            setTimeout(() => {
+                window.location.href = '/admin/dashboard';
+            }, 500);
 
-            // Si el login es exitoso:
-            console.log('Login exitoso:', formData);
-
-            // Redirigir al dashboard o guardar token
-            // window.location.href = '/admin/dashboard';
+            return false;
 
         } catch (err) {
-            console.error('Error en login:', err);
-            setError('Credenciales incorrectas. Por favor intenta de nuevo.');
-        } finally {
             setLoading(false);
+
+            if (err?.response) {
+                const status = err.response.status;
+                const data = err.response.data;
+
+                if (status === 401 || status === 400) {
+                    setError('Usuario o contraseña incorrectos');
+                } else if (status === 404) {
+                    setError('Usuario no encontrado');
+                } else if (status === 500) {
+                    setError('Error en el servidor. Intenta más tarde.');
+                } else {
+                    setError(data?.message || data?.error || 'Error al iniciar sesión');
+                }
+            } else if (err?.request) {
+                setError('No se pudo conectar con el servidor. Verifica tu conexión.');
+            } else {
+                setError(err?.message || 'Error inesperado. Por favor intenta de nuevo.');
+            }
+
+            return false;
         }
     };
 
@@ -79,7 +101,7 @@ const Login = () => {
                     <p className="login-subtitle">Ingresa tus credenciales para continuar</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="login-form">
+                <form onSubmit={(e) => { e.preventDefault(); return false; }} className="login-form" noValidate>
                     {error && (
                         <div className="error-message">
                             <i className="fas fa-exclamation-circle"></i>
@@ -88,20 +110,21 @@ const Login = () => {
                     )}
 
                     <div className="form-group">
-                        <label htmlFor="email" className="form-label">
-                            <i className="fas fa-envelope"></i>
-                            Correo Electrónico
+                        <label htmlFor="usuario" className="form-label">
+                            <i className="fas fa-user"></i>
+                            Usuario
                         </label>
                         <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
+                            type="text"
+                            id="usuario"
+                            name="usuario"
+                            value={formData.usuario}
                             onChange={handleChange}
-                            placeholder="admin@ejemplo.com"
+                            onKeyPress={handleKeyPress}
+                            placeholder="Tu usuario"
                             className="form-input"
                             disabled={loading}
-                            autoComplete="email"
+                            autoComplete="username"
                         />
                     </div>
 
@@ -117,6 +140,7 @@ const Login = () => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
+                                onKeyPress={handleKeyPress}
                                 placeholder="••••••••"
                                 className="form-input"
                                 disabled={loading}
@@ -139,13 +163,11 @@ const Login = () => {
                             <input type="checkbox" />
                             <span className="checkbox-label">Recordarme</span>
                         </label>
-                        <a href="#" className="forgot-password">
-                            ¿Olvidaste tu contraseña?
-                        </a>
                     </div>
 
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={handleSubmit}
                         className="submit-button"
                         disabled={loading}
                     >
