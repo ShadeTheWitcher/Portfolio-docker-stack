@@ -205,53 +205,81 @@
 .education-section {
   margin-top: 4rem;
 
-  .section-title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
+  h3 {
     text-align: center;
-
-    i {
-      margin-right: 10px;
-      color: #7700ff;
-    }
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
   }
 
-  .education-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+  .timeline {
+    position: relative;
+    margin-left: 20px;
+    padding-left: 20px;
 
-    .education-item {
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 3px;
+      top: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, #ff0077, #7700ff);
+      border-radius: 10px;
+      opacity: 0.4;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2.5rem;
       display: flex;
       align-items: flex-start;
       gap: 1rem;
+      justify-content: flex-start;
 
-      .education-marker {
-        width: 14px;
-        height: 14px;
+      .timeline-dot {
+        width: 18px;
+        height: 18px;
         background: linear-gradient(135deg, #ff0077, #7700ff);
         border-radius: 50%;
-        margin-top: 6px;
+        box-shadow: 0 0 12px rgba(255, 0, 119, 0.5);
+        flex-shrink: 0;
+        margin-left: -29px;
       }
 
-      .education-content {
-        h3 {
+      .timeline-card {
+        background: #1a1a1a;
+        border: 2px solid #2a2a2a;
+        padding: 1.3rem 1.5rem;
+        border-radius: 12px;
+        width: 100%;
+        transition: all 0.3s ease;
+        max-width: 550px;
+        /* Reduce longitud horizontal */
+        width: 100%;
+
+        h4 {
           font-size: 1.3rem;
-          font-weight: 700;
           margin-bottom: 0.3rem;
+          color: #fff;
         }
 
-        .education-description {
-          color: #aaa;
-          margin-bottom: 0.3rem;
+        .timeline-date {
+          font-size: 0.9rem;
+          color: #ff0077;
+          font-weight: 600;
         }
 
-        .education-duration {
+        p {
+          margin-top: 0.5rem;
           color: #ccc;
+          font-size: 1rem;
+        }
 
-          i {
-            margin-right: 5px;
-          }
+        &:hover {
+          border-color: #ff0077;
+          transform: translateX(8px);
+          box-shadow: 0 10px 30px rgba(255, 0, 119, 0.2);
         }
       }
     }

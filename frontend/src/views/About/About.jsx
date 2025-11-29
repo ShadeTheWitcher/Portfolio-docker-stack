@@ -127,31 +127,35 @@ const About = () => {
       )}
 
       {/* Education Section */}
-      {education.length > 0 && (
-        <div className="education-section">
-          <h2 className="section-title">
-            <i className="fas fa-graduation-cap"></i>
-            Educación
-          </h2>
-          <div className="education-timeline">
-            {education.map((edu) => (
-              <div key={edu.id} className="education-item">
-                <div className="education-marker"></div>
-                <div className="education-content">
-                  <h3 className="education-title">{edu.nombre}</h3>
-                  <p className="education-description">{edu.descripcion}</p>
-                  {edu.cant_horas && (
-                    <span className="education-duration">
-                      <i className="fas fa-clock"></i>
-                      {edu.cant_horas}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
+      <div className="education-section">
+        <h3>Educación</h3>
+
+        <div className="timeline">
+
+          {/* Evento 1 */}
+          <div className="timeline-item">
+            <div className="timeline-dot"></div>
+
+            <div className="timeline-card">
+              <h4>Licenciatura en Sistemas de Información</h4>
+              <span className="timeline-date">2021 - Actualidad</span>
+              <p>Universidad Nacional del Nordeste</p>
+            </div>
           </div>
+
+          {/* Evento 2 */}
+          <div className="timeline-item">
+            <div className="timeline-dot"></div>
+
+            <div className="timeline-card">
+              <h4>Bachiller en Economía y Administración</h4>
+              <span className="timeline-date">2016 - 2020</span>
+              <p>Colegio Secundario Manuel Belgrano</p>
+            </div>
+          </div>
+
         </div>
-      )}
+      </div>
 
       {/* Contact Info */}
       {info && (
