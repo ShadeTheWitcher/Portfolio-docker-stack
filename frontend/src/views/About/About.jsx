@@ -114,10 +114,18 @@ const About = () => {
               'Desarrollador Full Stack apasionado por crear experiencias web modernas y funcionales.'}
           </p>
 
-          <button onClick={handleContactClick} className="contact-cta-button">
-            <i className="fas fa-paper-plane"></i>
-            Contáctame
-          </button>
+          <div className="bio-actions">
+            <button onClick={handleContactClick} className="contact-cta-button">
+              <i className="fas fa-paper-plane"></i>
+              Contáctame
+            </button>
+            {info?.cv_url && (
+              <a href={info.cv_url} target="_blank" rel="noopener noreferrer" className="cv-download-button">
+                <i className="fas fa-eye"></i>
+                Ver CV
+              </a>
+            )}
+          </div>
         </div>
       </div>
 

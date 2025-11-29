@@ -194,33 +194,56 @@
     flex: 1;
   }
 
-  .contact-cta-button {
-    align-self: flex-start;
-    background: linear-gradient(135deg, #ff0077, #7700ff);
-    border: none;
-    color: #fff;
-    padding: 0.9rem 2rem;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
+  .bio-actions {
     display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 0, 119, 0.3);
+    gap: 1rem;
+    flex-wrap: wrap;
 
-    i {
-      font-size: 1.1rem;
+    .contact-cta-button,
+    .cv-download-button {
+      flex: 1;
+      min-width: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.9rem 1.5rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
     }
 
-    &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(255, 0, 119, 0.5);
+    .contact-cta-button {
+      background: linear-gradient(135deg, #ff0077, #7700ff);
+      border: none;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(255, 0, 119, 0.3);
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 0, 119, 0.5);
+      }
     }
 
-    &:active {
-      transform: translateY(-1px);
+    .cv-download-button {
+      background: transparent;
+      border: 2px solid #00f2ff;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 242, 255, 0.1);
+
+      i {
+        font-size: 1.1rem;
+      }
+
+      &:hover {
+        background: #00f2ff;
+        color: #000;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 242, 255, 0.3);
+      }
     }
   }
 }
@@ -570,9 +593,8 @@
       font-size: 1rem;
     }
 
-    .contact-cta-button {
-      width: 100%;
-      justify-content: center;
+    .bio-actions {
+      flex-direction: column;
     }
   }
 

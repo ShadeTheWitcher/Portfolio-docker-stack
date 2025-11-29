@@ -35,15 +35,15 @@ function Home() {
   }, []);
 
   // Estado para información personal
-  const [homeText, setHomeText] = useState("");
+  const [info, setInfo] = useState(null);
 
-  // Cargar información personal (texto home)
+  // Cargar información personal
   useEffect(() => {
     const fetchInfo = async () => {
       try {
         const data = await getInfo();
-        if (data && data.texto_home) {
-          setHomeText(data.texto_home);
+        if (data) {
+          setInfo(data);
         }
       } catch (err) {
         console.error('Error al cargar información:', err);
@@ -71,7 +71,7 @@ function Home() {
           </h2>
 
           <p className="hero-description">
-            {homeText || "Apasionado por crear experiencias web modernas y funcionales. Especializado en React, Node.js y tecnologías cloud."}
+            {info?.texto_home || "Apasionado por crear experiencias web modernas y funcionales. Especializado en React, Node.js y tecnologías cloud."}
           </p>
 
           <div className="cta-buttons">
@@ -83,6 +83,12 @@ function Home() {
               <i className="fas fa-envelope"></i>
               Contactar
             </a>
+            {info?.cv_url && (
+              <a href={info.cv_url} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-cv">
+                <i className="fas fa-eye"></i>
+                Ver CV
+              </a>
+            )}
           </div>
 
           {/* Stats */}
