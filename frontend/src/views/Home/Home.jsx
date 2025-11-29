@@ -3,6 +3,7 @@ import './Home.scss';
 import ProjectCard from "../../components/ProjectCard";
 import { calculateFreelanceExperience } from "../../utils/dateUtils";
 import { getFeaturedProjects } from "../../services/projectService";
+import { getInfo } from "../../services/infoService";
 
 function Home() {
   // Fecha de inicio como freelance: 1 de Marzo de 2025
@@ -33,6 +34,24 @@ function Home() {
     fetchProjects();
   }, []);
 
+  // Estado para información personal
+  const [homeText, setHomeText] = useState("");
+
+  // Cargar información personal (texto home)
+  useEffect(() => {
+    const fetchInfo = async () => {
+      try {
+        const data = await getInfo();
+        if (data && data.texto_home) {
+          setHomeText(data.texto_home);
+        }
+      } catch (err) {
+        console.error('Error al cargar información:', err);
+      }
+    };
+    fetchInfo();
+  }, []);
+
   return (
     <section className="home-container">
       {/* Hero Section */}
@@ -52,8 +71,7 @@ function Home() {
           </h2>
 
           <p className="hero-description">
-            Apasionado por crear experiencias web modernas y funcionales.
-            Especializado en React, Node.js y tecnologías cloud.
+            {homeText || "Apasionado por crear experiencias web modernas y funcionales. Especializado en React, Node.js y tecnologías cloud."}
           </p>
 
           <div className="cta-buttons">

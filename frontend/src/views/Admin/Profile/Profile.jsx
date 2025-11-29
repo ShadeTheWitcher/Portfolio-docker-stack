@@ -37,6 +37,7 @@ const Profile = () => {
         linkedin: '',
         github: '',
         descripcion: '',
+        texto_home: '',
         cv_url: '',
     });
 
@@ -48,17 +49,17 @@ const Profile = () => {
         try {
             setLoading(true);
             const data = await getInfo();
-            if (data && data.length > 0) {
-                const info = data[0];
+            if (data) {
                 setFormData({
-                    nombre: info.nombre || '',
-                    apellido: info.apellido || '',
-                    email: info.email || '',
-                    telefono: info.telefono || '',
-                    linkedin: info.linkedin || '',
-                    github: info.github || '',
-                    descripcion: info.descripcion || '',
-                    cv_url: info.cv_url || '',
+                    nombre: data.nombre || '',
+                    apellido: data.apellido || '',
+                    email: data.email || '',
+                    telefono: data.telefono || '',
+                    linkedin: data.linkedin || '',
+                    github: data.github || '',
+                    descripcion: data.descripcion || '',
+                    texto_home: data.texto_home || '',
+                    cv_url: data.cv_url || '',
                 });
             }
         } catch (error) {
@@ -204,7 +205,7 @@ const Profile = () => {
                                     size="medium"
                                 />
                                 <TextField
-                                    label="Bio / Descripción"
+                                    label="Bio / Descripción (About)"
                                     name="descripcion"
                                     value={formData.descripcion}
                                     onChange={handleChange}
@@ -212,6 +213,17 @@ const Profile = () => {
                                     multiline
                                     rows={4}
                                     placeholder="Breve descripción sobre ti..."
+                                    variant="outlined"
+                                />
+                                <TextField
+                                    label="Texto Home"
+                                    name="texto_home"
+                                    value={formData.texto_home}
+                                    onChange={handleChange}
+                                    fullWidth
+                                    multiline
+                                    rows={4}
+                                    placeholder="Texto de bienvenida para el Home..."
                                     variant="outlined"
                                 />
                             </Box>

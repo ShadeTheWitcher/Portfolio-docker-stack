@@ -110,7 +110,7 @@ const About = () => {
             Acerca de
           </h3>
           <p className="bio-text">
-            {info?.sobre_mi ||
+            {info?.descripcion ||
               'Desarrollador Full Stack apasionado por crear experiencias web modernas y funcionales.'}
           </p>
 
@@ -186,21 +186,21 @@ const About = () => {
       </div>
 
       {/* Contact Links */}
-      {info && (info.correo || info.link_linkedin || info.link_telegram) && (
+      {info && (info.email || info.linkedin || info.github) && (
         <div className="social-links">
-          {info.correo && (
-            <a href={`mailto:${info.correo}`} className="social-link" title="Email">
+          {info.email && (
+            <a href={`mailto:${info.email}`} className="social-link" title="Email">
               <i className="fas fa-envelope"></i>
             </a>
           )}
-          {info.link_linkedin && (
-            <a href={info.link_linkedin} target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn">
+          {info.linkedin && (
+            <a href={info.linkedin} target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn">
               <i className="fab fa-linkedin"></i>
             </a>
           )}
-          {info.link_telegram && (
-            <a href={info.link_telegram} target="_blank" rel="noopener noreferrer" className="social-link" title="Telegram">
-              <i className="fab fa-telegram"></i>
+          {info.github && (
+            <a href={info.github} target="_blank" rel="noopener noreferrer" className="social-link" title="GitHub">
+              <i className="fab fa-github"></i>
             </a>
           )}
         </div>

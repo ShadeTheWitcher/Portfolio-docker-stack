@@ -63,23 +63,23 @@ const Contacto = () => {
             <div className="contact-card">
 
               {/* Sección de Email */}
-              {contactInfo?.correo && (
+              {contactInfo?.email && (
                 <div className="email-section">
                   <div className="icon-wrapper">
                     <i className="fas fa-envelope"></i>
                   </div>
                   <h3>Correo Electrónico</h3>
-                  <p className="email-text">{contactInfo.correo}</p>
+                  <p className="email-text">{contactInfo.email}</p>
                   <div className="button-group">
                     <button
                       className="btn-action btn-copy"
-                      onClick={() => copyToClipboard(contactInfo.correo)}
+                      onClick={() => copyToClipboard(contactInfo.email)}
                     >
                       <i className="far fa-copy"></i>
                       <span>Copiar</span>
                     </button>
                     <a
-                      href={`mailto:${contactInfo.correo}`}
+                      href={`mailto:${contactInfo.email}`}
                       className="btn-action btn-send"
                     >
                       <i className="fas fa-paper-plane"></i>
@@ -96,9 +96,9 @@ const Contacto = () => {
 
               {/* Redes Sociales */}
               <div className="social-section">
-                {contactInfo?.link_linkedin && (
+                {contactInfo?.linkedin && (
                   <a
-                    href={contactInfo.link_linkedin}
+                    href={contactInfo.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="social-card"
@@ -111,17 +111,32 @@ const Contacto = () => {
                   </a>
                 )}
 
-                {contactInfo?.link_telegram && (
+                {contactInfo?.github && (
                   <a
-                    href={contactInfo.link_telegram}
+                    href={contactInfo.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="social-card"
                   >
-                    <div className="social-icon-wrapper telegram">
-                      <i className="fab fa-telegram"></i>
+                    <div className="social-icon-wrapper github">
+                      <i className="fab fa-github"></i>
                     </div>
-                    <h4>Telegram</h4>
+                    <h4>GitHub</h4>
+                    <p>Ver mis proyectos</p>
+                  </a>
+                )}
+
+                {contactInfo?.telefono && (
+                  <a
+                    href={`https://wa.me/${contactInfo.telefono.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-card"
+                  >
+                    <div className="social-icon-wrapper whatsapp">
+                      <i className="fab fa-whatsapp"></i>
+                    </div>
+                    <h4>WhatsApp</h4>
                     <p>Envíame un mensaje</p>
                   </a>
                 )}
