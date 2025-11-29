@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 // Importar rutas
 import authRoutes from "./routes/authRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 import infoRoutes from "./routes/infoRoutes.js";
 import techRoutes from "./routes/techRoutes.js";
 import educationRoutes from "./routes/educationRoutes.js";
@@ -38,6 +39,7 @@ app.use('/uploads', express.static(uploadsDir));
 // Rutas de la API
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use("/api/info", infoRoutes);
 app.use("/api/technologies", techRoutes);
 app.use("/api/education", educationRoutes);
@@ -50,6 +52,7 @@ app.get("/", (req, res) => {
     endpoints: {
       auth: "/api/auth",
       projects: "/api/projects",
+      categories: "/api/categories",
       info: "/api/info",
       technologies: "/api/technologies",
       education: "/api/education"
