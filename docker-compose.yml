@@ -59,7 +59,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./db/seed_data.sql:/docker-entrypoint-initdb.d/02-seed_data.sql
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
