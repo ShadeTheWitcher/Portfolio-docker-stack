@@ -32,6 +32,7 @@ import {
     deleteProject,
 } from '../../../services/projectService';
 import { getAllCategories } from '../../../services/categoryService';
+import FileUploader from '../../../components/FileUploader';
 
 const Projects = () => {
     const [projects, setProjects] = useState([]);
@@ -333,13 +334,13 @@ const Projects = () => {
                             fullWidth
                             placeholder="https://mi-proyecto.com"
                         />
-                        <TextField
-                            label="URL Imagen"
-                            name="imagen"
+                        <FileUploader
                             value={formData.imagen}
-                            onChange={handleChange}
-                            fullWidth
-                            placeholder="https://ejemplo.com/imagen.png"
+                            onChange={(url) => setFormData((prev) => ({ ...prev, imagen: url }))}
+                            label="Imagen del Proyecto"
+                            accept="image/*"
+                            type="image"
+                            helperText="Máximo 5MB. Formatos: jpg, png, gif, webp, svg"
                         />
                         <FormControlLabel
                             control={
