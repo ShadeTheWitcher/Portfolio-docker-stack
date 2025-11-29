@@ -13,6 +13,11 @@ export default function Navbar() {
           <Link to="/proyectos">Proyectos</Link>
           <Link to="/contacto">Contacto</Link>
         </div>
+
+        {/* Admin Access - Semi Oculto */}
+        <Link to="/admin/login" className="admin-access" title="Admin">
+          <i className="fas fa-shield-alt"></i>
+        </Link>
       </div>
     </nav>
   );

@@ -5,6 +5,7 @@ import Home from './views/Home/Home';
 import About from './views/About/About';
 import Contacto from './views/Contacto/Contacto';
 import Proyectos from './views/Proyectos/Proyectos';
+import Login from './views/Admin/Login/Login';
 import './styles/global.scss';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/proyectos" element={<Proyectos />} />
+        <Route path="/admin/login" element={<Login />} />
       </Routes>
     </Router>
   );
