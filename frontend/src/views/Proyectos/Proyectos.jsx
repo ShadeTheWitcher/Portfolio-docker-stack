@@ -39,19 +39,25 @@ function Proyectos() {
 
       {loading && (
         <div className="loading-state">
+          <div className="loader"></div>
           <p>Cargando proyectos...</p>
         </div>
       )}
 
       {error && (
         <div className="error-state">
+          <i className="fas fa-exclamation-circle"></i>
           <p>{error}</p>
         </div>
       )}
 
       {!loading && !error && projects.length === 0 && (
         <div className="empty-state">
+          <i className="fas fa-folder-open"></i>
           <p>No hay proyectos disponibles</p>
+          <a href="/contacto" className="btn-contact">
+            Contáctame para crear uno
+          </a>
         </div>
       )}
 
@@ -59,74 +65,7 @@ function Proyectos() {
         <>
           <div className="projects-grid">
             {projects.map((project) => (
-              <div className="project-card" key={project.id_proyect}>
-                <div className="project-image">
-                  {project.imagen ? (
-                    <img
-                      src={project.imagen}
-                      alt={project.name_proyect}
-                    />
-                  ) : (
-                    <div className="image-placeholder">
-                      <i className="fas fa-code"></i>
-                    </div>
-                  )}
-                  <div className="project-overlay">
-                    <div className="overlay-content">
-                      {project.link_github && (
-                        <a
-                          href={project.link_github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="overlay-link"
-                        >
-                          <i className="fab fa-github"></i>
-                        </a>
-                      )}
-                      {project.link_web && (
-                        <a
-                          href={project.link_web}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="overlay-link"
-                        >
-                          <i className="fas fa-external-link-alt"></i>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="project-content">
-                  <h3 className="project-title">{project.name_proyect}</h3>
-                  <p className="project-description">{project.descripcion}</p>
-
-                  <div className="project-actions">
-                    {project.link_github && (
-                      <a
-                        href={project.link_github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-github"
-                      >
-                        <i className="fab fa-github"></i>
-                        GitHub
-                      </a>
-                    )}
-                    {project.link_web && (
-                      <a
-                        href={project.link_web}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-demo"
-                      >
-                        <i className="fas fa-external-link-alt"></i>
-                        Demo
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <ProjectCard key={project.id_proyect} proyect={project} />
             ))}
           </div>
 
