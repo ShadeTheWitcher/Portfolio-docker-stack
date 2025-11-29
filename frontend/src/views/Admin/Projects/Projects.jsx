@@ -53,6 +53,8 @@ const Projects = () => {
         imagen: '',
         destacado: 'NO',
         tecnologias: [],
+        video_url: '',
+        imagenes_adicionales: [],
     });
 
     useEffect(() => {
@@ -106,6 +108,8 @@ const Projects = () => {
                 imagen: project.imagen || '',
                 destacado: project.destacado || 'NO',
                 tecnologias: project.tecnologias ? project.tecnologias.map(t => t.id) : [],
+                video_url: project.video_url || '',
+                imagenes_adicionales: project.imagenes_adicionales || [],
             });
         } else {
             setCurrentProject(null);
@@ -118,6 +122,8 @@ const Projects = () => {
                 imagen: '',
                 destacado: 'NO',
                 tecnologias: [],
+                video_url: '',
+                imagenes_adicionales: [],
             });
         }
         setOpenDialog(true);
@@ -384,11 +390,71 @@ const Projects = () => {
                         <FileUploader
                             value={formData.imagen}
                             onChange={(url) => setFormData((prev) => ({ ...prev, imagen: url }))}
-                            label="Imagen del Proyecto"
+                            label="Imagen Principal (Portada)"
                             accept="image/*"
                             type="image"
                             helperText="Máximo 5MB. Formatos: jpg, png, gif, webp, svg"
                         />
+
+                        <TextField
+                            label="URL Video (YouTube/Vimeo)"
+                            name="video_url"
+                            value={formData.video_url || ''}
+                            onChange={handleChange}
+                            fullWidth
+                            placeholder="https://www.youtube.com/watch?v=..."
+                        />
+
+                        <Box>
+                            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                                Galería de Imágenes (Screenshots)
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                {formData.imagenes_adicionales && formData.imagenes_adicionales.map((img, index) => (
+                                    <Box key={index} sx={{ display: 'flex', gap: 1, alignItems: 'flex-start' }}>
+                                        <Box sx={{ flexGrow: 1 }}>
+                                            <FileUploader
+                                                value={img}
+                                                onChange={(url) => {
+                                                    const newImages = [...formData.imagenes_adicionales];
+                                                    if (url) {
+                                                        newImages[index] = url;
+                                                    } else {
+                                                        newImages.splice(index, 1);
+                                                    }
+                                                    setFormData(prev => ({ ...prev, imagenes_adicionales: newImages }));
+                                                }}
+                                                label={`Imagen ${index + 1}`}
+                                                accept="image/*"
+                                                type="image"
+                                            />
+                                        </Box>
+                                        <IconButton
+                                            color="error"
+                                            onClick={() => {
+                                                const newImages = formData.imagenes_adicionales.filter((_, i) => i !== index);
+                                                setFormData(prev => ({ ...prev, imagenes_adicionales: newImages }));
+                                            }}
+                                            sx={{ mt: 1 }}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Box>
+                                ))}
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<AddIcon />}
+                                    onClick={() => setFormData(prev => ({
+                                        ...prev,
+                                        imagenes_adicionales: [...(prev.imagenes_adicionales || []), '']
+                                    }))}
+                                    size="small"
+                                >
+                                    Agregar Imagen a Galería
+                                </Button>
+                            </Box>
+                        </Box>
+
                         <FormControlLabel
                             control={
                                 <Switch
