@@ -375,6 +375,38 @@
           margin: 0;
         }
 
+        .education-description {
+          font-size: 0.9rem;
+          color: #888;
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
+          line-height: 1.5;
+        }
+
+        .education-certificate-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: #ff0077;
+          font-size: 0.9rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          margin-top: 0.8rem;
+          padding: 0.4rem 0.8rem;
+          background: rgba(255, 0, 119, 0.1);
+          border-radius: 6px;
+
+          i {
+            font-size: 1rem;
+          }
+
+          &:hover {
+            background: rgba(255, 0, 119, 0.2);
+            transform: translateX(5px);
+          }
+        }
+
         &:hover {
           border-color: #7700ff;
           transform: translateX(8px);

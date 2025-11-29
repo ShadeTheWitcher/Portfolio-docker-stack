@@ -35,7 +35,8 @@ export const getEducationById = async (req, res) => {
 // Crear educación
 export const createEducation = async (req, res) => {
   try {
-    const { titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso } = req.body;
+    console.log('Create Education Request Body:', req.body);
+    const { titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso, certificado_url } = req.body;
 
     if (!titulo || !institucion) {
       return res.status(400).json({ 
@@ -45,8 +46,8 @@ export const createEducation = async (req, res) => {
     }
 
     const result = await pool.query(`
-      INSERT INTO educacion (titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO educacion (titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso, certificado_url)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
     `, [
       titulo, 
@@ -54,7 +55,8 @@ export const createEducation = async (req, res) => {
       descripcion || null, 
       fecha_inicio || null, 
       fecha_fin || null, 
-      en_curso || 'NO'
+      en_curso || 'NO',
+      certificado_url || null
     ]);
 
     res.status(201).json({
@@ -72,7 +74,7 @@ export const createEducation = async (req, res) => {
 export const updateEducation = async (req, res) => {
   try {
     const { id } = req.params;
-    const { titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso } = req.body;
+    const { titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso, certificado_url } = req.body;
 
     const result = await pool.query(`
       UPDATE educacion 
@@ -82,8 +84,9 @@ export const updateEducation = async (req, res) => {
           fecha_inicio = $4, 
           fecha_fin = $5, 
           en_curso = $6,
+          certificado_url = $7,
           updated_at = CURRENT_TIMESTAMP
-      WHERE id = $7
+      WHERE id = $8
       RETURNING *
     `, [
       titulo, 
@@ -92,6 +95,7 @@ export const updateEducation = async (req, res) => {
       fecha_inicio || null, 
       fecha_fin || null, 
       en_curso || 'NO', 
+      certificado_url || null,
       id
     ]);
 

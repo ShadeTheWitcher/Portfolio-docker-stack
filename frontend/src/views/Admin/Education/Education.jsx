@@ -69,8 +69,8 @@ const Education = () => {
                 institucion: edu.institucion,
                 titulo: edu.titulo,
                 descripcion: edu.descripcion || '',
-                fecha_inicio: edu.fecha_inicio || '',
-                fecha_fin: edu.fecha_fin || '',
+                fecha_inicio: edu.fecha_inicio ? edu.fecha_inicio.substring(0, 7) : '',
+                fecha_fin: edu.fecha_fin ? edu.fecha_fin.substring(0, 7) : '',
                 en_curso: edu.en_curso === 'SI',
                 certificado_url: edu.certificado_url || '',
             });
@@ -118,6 +118,8 @@ const Education = () => {
         try {
             const dataToSend = {
                 ...formData,
+                fecha_inicio: formData.fecha_inicio || null,
+                fecha_fin: formData.fecha_fin || null,
                 en_curso: formData.en_curso ? 'SI' : 'NO',
             };
 

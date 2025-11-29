@@ -153,28 +153,39 @@ const About = () => {
             Educación
           </h3>
           <div className="education-list">
-            <div className="education-item">
-              <div className="education-dot"></div>
-              <div className="education-content">
-                <h4>Licenciatura en Sistemas de Información</h4>
-                <span className="education-date">2021 - Actualidad</span>
-                <p className="education-institution">Universidad Nacional del Nordeste</p>
+            {education.map((edu) => (
+              <div key={edu.id} className="education-item">
+                <div className="education-dot"></div>
+                <div className="education-content">
+                  <h4>{edu.titulo}</h4>
+                  <span className="education-date">
+                    {edu.fecha_inicio ? new Date(edu.fecha_inicio).getFullYear() : ''}
+                    {' - '}
+                    {edu.en_curso === 'SI' ? 'Actualidad' : (edu.fecha_fin ? new Date(edu.fecha_fin).getFullYear() : '')}
+                  </span>
+                  <p className="education-institution">{edu.institucion}</p>
+                  {edu.descripcion && <p className="education-description">{edu.descripcion}</p>}
+                  {edu.certificado_url && (
+                    <a
+                      href={edu.certificado_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="education-certificate-link"
+                    >
+                      <i className="fas fa-certificate"></i> Ver Certificado
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
-
-            <div className="education-item">
-              <div className="education-dot"></div>
-              <div className="education-content">
-                <h4>Bachiller en Economía y Administración</h4>
-                <span className="education-date">2016 - 2020</span>
-                <p className="education-institution">Colegio Secundario Manuel Belgrano</p>
-              </div>
-            </div>
+            ))}
+            {education.length === 0 && (
+              <p className="no-data">No hay información de educación disponible.</p>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Contact Links (Optional - solo si quieres mostrar los enlaces también) */}
+      {/* Contact Links */}
       {info && (info.correo || info.link_linkedin || info.link_telegram) && (
         <div className="social-links">
           {info.correo && (
