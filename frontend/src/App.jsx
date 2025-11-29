@@ -26,6 +26,7 @@ import Login from './views/Admin/Login/Login';
 import AdminLayout from './layouts/AdminLayout';
 import Dashboard from './views/Admin/Dashboard/Dashboard';
 import Projects from './views/Admin/Projects/Projects';
+import Categories from './views/Admin/Categories/Categories';
 import Technologies from './views/Admin/Technologies/Technologies';
 import Education from './views/Admin/Education/Education';
 import Profile from './views/Admin/Profile/Profile';
@@ -79,6 +80,7 @@ function App() {
           >
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="categories" element={<Categories />} />
             <Route path="technologies" element={<Technologies />} />
             <Route path="education" element={<Education />} />
             <Route path="profile" element={<Profile />} />

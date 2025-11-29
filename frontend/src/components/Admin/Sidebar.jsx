@@ -15,6 +15,7 @@ import {
 import {
     Dashboard as DashboardIcon,
     Folder as FolderIcon,
+    Category as CategoryIcon,
     Build as BuildIcon,
     School as SchoolIcon,
     Person as PersonIcon,
@@ -26,6 +27,7 @@ const DRAWER_WIDTH = 260;
 const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard' },
     { text: 'Proyectos', icon: <FolderIcon />, path: '/admin/projects' },
+    { text: 'Categorías', icon: <CategoryIcon />, path: '/admin/categories' },
     { text: 'Tecnologías', icon: <BuildIcon />, path: '/admin/technologies' },
     { text: 'Educación', icon: <SchoolIcon />, path: '/admin/education' },
     { text: 'Perfil', icon: <PersonIcon />, path: '/admin/profile' },
