@@ -33,7 +33,7 @@ services:
     expose:
       - "80"
     environment:
-      REACT_APP_API_URL: "http://${BACKEND_DOMAIN:-localhost}:4000"  #cambiar de http a https si es entorno producción
+      REACT_APP_API_URL: "https://${BACKEND_DOMAIN:-localhost}:4000"  #cambiar de http a https si es entorno producción
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.front.rule=Host(`${FRONTEND_DOMAIN:-localhost}`)" 
