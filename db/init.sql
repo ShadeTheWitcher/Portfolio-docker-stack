@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS usuario (
 -- Usuario admin por defecto (contraseña: admin123)
 -- IMPORTANTE: Cambiar en producción ejecutando: node backend/scripts/updateAdminPassword.js
 INSERT INTO usuario (id, usuario, pass, perfil_id, baja, email, nombre, apellido) VALUES
-(9, 'admin', '2yyZ33Whxyeoo', 1, 'NO', '', '', '');
+(9, 'admin', '$2a$10$f715RzKc6B2r/wK9WmBwM./11oJ0QVU5v/D9gYPCbrRqjqmehWS6q', 1, 'NO', '', '', '');
 
 -- ====================================
 -- TABLA DE INFORMACIÓN PERSONAL
