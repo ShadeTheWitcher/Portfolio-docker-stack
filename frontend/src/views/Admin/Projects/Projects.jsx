@@ -417,11 +417,7 @@ const Projects = () => {
                                                 value={img}
                                                 onChange={(url) => {
                                                     const newImages = [...formData.imagenes_adicionales];
-                                                    if (url) {
-                                                        newImages[index] = url;
-                                                    } else {
-                                                        newImages.splice(index, 1);
-                                                    }
+                                                    newImages[index] = url;
                                                     setFormData(prev => ({ ...prev, imagenes_adicionales: newImages }));
                                                 }}
                                                 label={`Imagen ${index + 1}`}
