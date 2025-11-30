@@ -1,5 +1,5 @@
 // API Base URL
-export const API_URL = window._env_?.REACT_APP_API_URL || process.env.REACT_APP_API_URL || 'http://localhost:4000';
+export const API_URL = window._env_?.REACT_APP_API_URL || process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
 
 // Local Storage Keys
 export const TOKEN_KEY = 'portfolio_admin_token';
