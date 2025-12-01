@@ -74,7 +74,8 @@ const FileUploader = ({
                 }
             });
 
-            const fileUrl = `${api.defaults.baseURL.replace('/api', '')}${response.data.url}`;
+            // Supabase devuelve URL completa, no necesita concatenación
+            const fileUrl = response.data.url;
             setPreview(fileUrl);
             onChange(fileUrl);
             toast.success('Archivo subido exitosamente');
@@ -88,13 +89,11 @@ const FileUploader = ({
     };
 
     const handleDelete = async () => {
-        if (preview && preview.includes('/uploads/')) {
+        // Solo intentar eliminar del servidor si es una URL de Supabase o local
+        if (preview && (preview.includes('supabase.co') || preview.includes('/uploads/'))) {
             try {
-                // Extraer el path relativo (ej: /uploads/imagenes/archivo.jpg)
-                const relativePath = preview.substring(preview.indexOf('/uploads/'));
-
                 await api.delete('/upload/file', {
-                    data: { filepath: relativePath }
+                    data: { filepath: preview }
                 });
 
                 toast.success('Archivo eliminado del servidor');
