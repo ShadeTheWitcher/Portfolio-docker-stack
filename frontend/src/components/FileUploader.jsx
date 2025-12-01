@@ -74,8 +74,13 @@ const FileUploader = ({
                 }
             });
 
-            // Supabase devuelve URL completa, no necesita concatenación
-            const fileUrl = response.data.url;
+            // Detectar si es URL completa (Supabase) o ruta relativa (local)
+            let fileUrl = response.data.url;
+            if (!fileUrl.startsWith('http')) {
+                // Es ruta local, concatenar con URL del backend
+                fileUrl = `${api.defaults.baseURL.replace('/api', '')}${fileUrl}`;
+            }
+
             setPreview(fileUrl);
             onChange(fileUrl);
             toast.success('Archivo subido exitosamente');
