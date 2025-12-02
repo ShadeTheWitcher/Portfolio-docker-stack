@@ -1,0 +1,16 @@
+name: Keep Alive Render
+
+on:
+  schedule:
+    - cron: "*/6 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping frontend
+        run: curl -I https://portfolio-docker-stack.onrender.com
+
+      - name: Ping backend
+        run: curl -I https://portfolio-docker-stack-bakend.onrender.com
