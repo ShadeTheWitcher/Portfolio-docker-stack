@@ -4,6 +4,7 @@ import './About.scss';
 import { getInfo } from '../../services/infoService';
 import { getSkills } from '../../services/techService';
 import { getAllEducation } from '../../services/educationService';
+import { normalizeFileUrl } from '../../utils/urlUtils';
 
 const About = () => {
   const navigate = useNavigate();
@@ -120,7 +121,7 @@ const About = () => {
               Contáctame
             </button>
             {info?.cv_url && (
-              <a href={info.cv_url} target="_blank" rel="noopener noreferrer" className="cv-download-button">
+              <a href={normalizeFileUrl(info.cv_url)} target="_blank" rel="noopener noreferrer" className="cv-download-button">
                 <i className="fas fa-eye"></i>
                 Ver CV
               </a>
@@ -175,7 +176,7 @@ const About = () => {
                   {edu.descripcion && <p className="education-description">{edu.descripcion}</p>}
                   {edu.certificado_url && (
                     <a
-                      href={edu.certificado_url}
+                      href={normalizeFileUrl(edu.certificado_url)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="education-certificate-link"

@@ -13,6 +13,9 @@ const ProjectDetails = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
+    const [mainImageError, setMainImageError] = useState(false);
+    const [techImageErrors, setTechImageErrors] = useState({});
+    const [galleryImageErrors, setGalleryImageErrors] = useState({});
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -86,6 +89,18 @@ const ProjectDetails = () => {
         }
     };
 
+    const handleMainImageError = () => {
+        setMainImageError(true);
+    };
+
+    const handleTechImageError = (index) => {
+        setTechImageErrors(prev => ({ ...prev, [index]: true }));
+    };
+
+    const handleGalleryImageError = (index) => {
+        setGalleryImageErrors(prev => ({ ...prev, [index]: true }));
+    };
+
     return (
         <div className="project-details-container">
             <button onClick={() => navigate('/proyectos')} className="btn-back-floating">
@@ -99,8 +114,12 @@ const ProjectDetails = () => {
                     <div className="project-tech-stack">
                         {project.tecnologias && project.tecnologias.map((tech, index) => (
                             <div key={index} className="tech-badge" title={tech.nombre}>
-                                {tech.imagen ? (
-                                    <img src={tech.imagen} alt={tech.nombre} />
+                                {!techImageErrors[index] && tech.imagen ? (
+                                    <img
+                                        src={tech.imagen}
+                                        alt={tech.nombre}
+                                        onError={() => handleTechImageError(index)}
+                                    />
                                 ) : (
                                     <i className="fas fa-code"></i>
                                 )}
@@ -140,9 +159,21 @@ const ProjectDetails = () => {
                     )}
 
                     {/* Main Image (if no video or as fallback) */}
-                    {!youtubeId && project.imagen && (
+                    {!youtubeId && (
                         <div className="main-image-container">
-                            <img src={project.imagen} alt={project.name_proyect} className="main-image" />
+                            {!mainImageError && project.imagen ? (
+                                <img
+                                    src={project.imagen}
+                                    alt={project.name_proyect}
+                                    className="main-image"
+                                    onError={handleMainImageError}
+                                />
+                            ) : (
+                                <div className="main-image-placeholder">
+                                    <i className="fas fa-code"></i>
+                                    <span>{project.name_proyect}</span>
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -151,15 +182,29 @@ const ProjectDetails = () => {
                         <div className="gallery-section">
                             <h3>Galería</h3>
                             <div className="gallery-grid">
-                                {project.imagenes_adicionales.map((img, index) => (
-                                    <div
-                                        key={index}
-                                        className="gallery-item"
-                                        onClick={() => handleImageClick(index)}
-                                    >
-                                        <img src={img.url} alt={`Screenshot ${index + 1}`} />
-                                    </div>
-                                ))}
+                                {project.imagenes_adicionales.map((img, index) => {
+                                    const imgUrl = typeof img === 'string' ? img : img?.url;
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="gallery-item"
+                                            onClick={() => handleImageClick(index)}
+                                        >
+                                            {!galleryImageErrors[index] && imgUrl ? (
+                                                <img
+                                                    src={imgUrl}
+                                                    alt={`Screenshot ${index + 1}`}
+                                                    onError={() => handleGalleryImageError(index)}
+                                                />
+                                            ) : (
+                                                <div className="gallery-item-placeholder">
+                                                    <i className="fas fa-code"></i>
+                                                    <span>Imagen inválida</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}

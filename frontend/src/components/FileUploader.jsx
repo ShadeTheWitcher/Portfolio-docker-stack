@@ -31,7 +31,7 @@ const FileUploader = ({
     type = "image", // "image" o "document"
     helperText = ""
 }) => {
-    const [mode, setMode] = useState(value && value.startsWith('http') ? 'url' : 'file');
+    const [mode, setMode] = useState(value && /^https?:\/\//i.test(value) ? 'url' : 'file');
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState(value || '');
 
@@ -74,7 +74,17 @@ const FileUploader = ({
                 }
             });
 
-            const fileUrl = `${api.defaults.baseURL.replace('/api', '')}${response.data.url}`;
+            // Detectar si es URL completa (Supabase/externa) o ruta relativa (local)
+            let fileUrl = response.data.url;
+
+            // Verificar si es una URL absoluta (comienza con http:// o https://)
+            const isAbsoluteUrl = /^https?:\/\//i.test(fileUrl);
+
+            if (!isAbsoluteUrl) {
+                // Es ruta local, concatenar con URL del backend
+                fileUrl = `${api.defaults.baseURL.replace('/api', '')}${fileUrl}`;
+            }
+
             setPreview(fileUrl);
             onChange(fileUrl);
             toast.success('Archivo subido exitosamente');
@@ -88,13 +98,11 @@ const FileUploader = ({
     };
 
     const handleDelete = async () => {
-        if (preview && preview.includes('/uploads/')) {
+        // Solo intentar eliminar del servidor si es una URL de Supabase o local
+        if (preview && (preview.includes('supabase.co') || preview.includes('/uploads/'))) {
             try {
-                // Extraer el path relativo (ej: /uploads/imagenes/archivo.jpg)
-                const relativePath = preview.substring(preview.indexOf('/uploads/'));
-
                 await api.delete('/upload/file', {
-                    data: { filepath: relativePath }
+                    data: { filepath: preview }
                 });
 
                 toast.success('Archivo eliminado del servidor');

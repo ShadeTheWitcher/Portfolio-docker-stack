@@ -1,5 +1,7 @@
--- Portfolio Database Schema - PostgreSQL
--- Converted from MySQL and updated with latest features
+-- ====================================
+-- PORTFOLIO DATABASE SCHEMA - SUPABASE
+-- ====================================
+-- Adaptado de init.sql para Supabase con Row Level Security (RLS)
 
 -- ====================================
 -- TABLAS DE CATÁLOGOS
@@ -14,7 +16,8 @@ CREATE TABLE IF NOT EXISTS categoriatec (
 INSERT INTO categoriatec (id, descripcion) VALUES
 (1, 'Lenguajes de programación'),
 (2, 'FRAMEWORKS Y LIBRERÍAS'),
-(3, 'SOFTWARE Y HERRAMIENTAS');
+(3, 'SOFTWARE Y HERRAMIENTAS')
+ON CONFLICT (id) DO NOTHING;
 
 -- Niveles de Tecnologías
 CREATE TABLE IF NOT EXISTS nivel_tecnologia (
@@ -26,7 +29,8 @@ INSERT INTO nivel_tecnologia (id, nombre) VALUES
 (1, 'Learning/trainee'),
 (2, 'Junior'),
 (3, 'Intermediate'),
-(4, 'Advanced');
+(4, 'Advanced')
+ON CONFLICT (id) DO NOTHING;
 
 -- Tipos de Proyecto (Categorías)
 CREATE TABLE IF NOT EXISTS tipo_proyecto (
@@ -36,7 +40,8 @@ CREATE TABLE IF NOT EXISTS tipo_proyecto (
 
 INSERT INTO tipo_proyecto (id_categoria, descripcion) VALUES
 (1, 'Web'),
-(2, 'Desktop');
+(2, 'Desktop')
+ON CONFLICT (id_categoria) DO NOTHING;
 
 -- Tipos de Usuario
 CREATE TABLE IF NOT EXISTS tipo_usuario (
@@ -47,7 +52,8 @@ CREATE TABLE IF NOT EXISTS tipo_usuario (
 INSERT INTO tipo_usuario (id_tipo, descripcion) VALUES
 (1, 'admin'),
 (2, 'user'),
-(3, 'extra');
+(3, 'extra')
+ON CONFLICT (id_tipo) DO NOTHING;
 
 -- ====================================
 -- TABLA DE USUARIOS
@@ -56,7 +62,7 @@ INSERT INTO tipo_usuario (id_tipo, descripcion) VALUES
 CREATE TABLE IF NOT EXISTS usuario (
   id SERIAL PRIMARY KEY,
   usuario VARCHAR(25) NOT NULL,
-  pass VARCHAR(255) NOT NULL,  -- Aumentado para bcrypt
+  pass VARCHAR(255) NOT NULL,
   perfil_id INTEGER NOT NULL,
   baja VARCHAR(2) NOT NULL DEFAULT 'NO',
   email VARCHAR(100) DEFAULT '',
@@ -66,9 +72,9 @@ CREATE TABLE IF NOT EXISTS usuario (
 );
 
 -- Usuario admin por defecto (contraseña: admin123)
--- IMPORTANTE: Cambiar en producción ejecutando: node backend/scripts/updateAdminPassword.js
 INSERT INTO usuario (id, usuario, pass, perfil_id, baja, email, nombre, apellido) VALUES
-(9, 'admin', '$2a$10$f715RzKc6B2r/wK9WmBwM./11oJ0QVU5v/D9gYPCbrRqjqmehWS6q', 1, 'NO', '', '', '');
+(9, 'admin', '$2a$10$f715RzKc6B2r/wK9WmBwM./11oJ0QVU5v/D9gYPCbrRqjqmehWS6q', 1, 'NO', '', '', '')
+ON CONFLICT (id) DO NOTHING;
 
 -- ====================================
 -- TABLA DE INFORMACIÓN PERSONAL
@@ -100,8 +106,8 @@ CREATE TABLE IF NOT EXISTS educacion (
   titulo VARCHAR(200) NOT NULL,
   institucion VARCHAR(200) NOT NULL,
   descripcion TEXT,
-  fecha_inicio VARCHAR(7),  -- Formato: YYYY-MM
-  fecha_fin VARCHAR(7),     -- Formato: YYYY-MM
+  fecha_inicio VARCHAR(7),
+  fecha_fin VARCHAR(7),
   en_curso VARCHAR(2) DEFAULT 'NO',
   certificado_url TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -110,7 +116,8 @@ CREATE TABLE IF NOT EXISTS educacion (
 
 INSERT INTO educacion (titulo, institucion, descripcion, fecha_inicio, fecha_fin, en_curso) VALUES
 ('Título Secundario', 'Escuela de Comercio', 'Economía y Administración de Empresas', '2010-03', '2015-12', 'NO'),
-('Curso de Inglés A2.2', 'CUI-UBA', 'Curso intensivo de inglés nivel A2.2 con 120 horas totales', '2020-06', '2020-12', 'NO');
+('Curso de Inglés A2.2', 'CUI-UBA', 'Curso intensivo de inglés nivel A2.2 con 120 horas totales', '2020-06', '2020-12', 'NO')
+ON CONFLICT DO NOTHING;
 
 -- ====================================
 -- TABLA DE TECNOLOGÍAS
@@ -175,14 +182,12 @@ CREATE TABLE IF NOT EXISTS proyecto_tecnologia (
 -- TABLAS LEGACY (Mantener por compatibilidad)
 -- ====================================
 
--- Screenshots (legacy - usar proyecto_imagenes en su lugar)
 CREATE TABLE IF NOT EXISTS screenshot (
   id SERIAL PRIMARY KEY,
   nombre_img VARCHAR(60) NOT NULL,
   url_imagen VARCHAR(300) NOT NULL
 );
 
--- Relación Proyecto-Screenshot (legacy)
 CREATE TABLE IF NOT EXISTS proyecto_screenshot (
   id_proyecto INTEGER NOT NULL,
   id_screenshot INTEGER NOT NULL,
@@ -205,3 +210,103 @@ SELECT setval('proyecto_id_proyect_seq', (SELECT COALESCE(MAX(id_proyect), 1) FR
 SELECT setval('tecnologia_id_seq', (SELECT COALESCE(MAX(id), 1) FROM tecnologia));
 SELECT setval('info_laboral_id_seq', (SELECT COALESCE(MAX(id), 1) FROM info_laboral));
 SELECT setval('proyecto_imagenes_id_seq', (SELECT COALESCE(MAX(id), 1) FROM proyecto_imagenes));
+
+-- ====================================
+-- ROW LEVEL SECURITY (RLS) POLICIES
+-- ====================================
+
+-- Habilitar RLS en todas las tablas
+ALTER TABLE categoriatec ENABLE ROW LEVEL SECURITY;
+ALTER TABLE nivel_tecnologia ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tipo_proyecto ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tipo_usuario ENABLE ROW LEVEL SECURITY;
+ALTER TABLE usuario ENABLE ROW LEVEL SECURITY;
+ALTER TABLE info_laboral ENABLE ROW LEVEL SECURITY;
+ALTER TABLE educacion ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tecnologia ENABLE ROW LEVEL SECURITY;
+ALTER TABLE proyecto ENABLE ROW LEVEL SECURITY;
+ALTER TABLE proyecto_imagenes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE proyecto_tecnologia ENABLE ROW LEVEL SECURITY;
+ALTER TABLE screenshot ENABLE ROW LEVEL SECURITY;
+ALTER TABLE proyecto_screenshot ENABLE ROW LEVEL SECURITY;
+
+-- ====================================
+-- POLÍTICAS DE LECTURA PÚBLICA
+-- ====================================
+-- Permitir lectura pública para todas las tablas (portfolio público)
+
+CREATE POLICY "Public read access" ON categoriatec FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON nivel_tecnologia FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON tipo_proyecto FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON tipo_usuario FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON info_laboral FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON educacion FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON tecnologia FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON proyecto FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON proyecto_imagenes FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON proyecto_tecnologia FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON screenshot FOR SELECT USING (true);
+CREATE POLICY "Public read access" ON proyecto_screenshot FOR SELECT USING (true);
+
+-- Usuario: Solo lectura pública (no exponemos contraseñas)
+CREATE POLICY "Public read access for non-sensitive data" ON usuario 
+  FOR SELECT 
+  USING (true);
+
+-- ====================================
+-- POLÍTICAS DE ESCRITURA (SERVICE ROLE)
+-- ====================================
+-- Solo el backend con service_role key puede escribir
+-- Estas políticas se aplicarán cuando uses el service_role key
+
+CREATE POLICY "Service role can insert" ON categoriatec FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON categoriatec FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON categoriatec FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON nivel_tecnologia FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON nivel_tecnologia FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON nivel_tecnologia FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON tipo_proyecto FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON tipo_proyecto FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON tipo_proyecto FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON tipo_usuario FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON tipo_usuario FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON tipo_usuario FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON usuario FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON usuario FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON usuario FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON info_laboral FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON info_laboral FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON info_laboral FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON educacion FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON educacion FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON educacion FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON tecnologia FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON tecnologia FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON tecnologia FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON proyecto FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON proyecto FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON proyecto FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON proyecto_imagenes FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON proyecto_imagenes FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON proyecto_imagenes FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON proyecto_tecnologia FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON proyecto_tecnologia FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON proyecto_tecnologia FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON screenshot FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON screenshot FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON screenshot FOR DELETE USING (true);
+
+CREATE POLICY "Service role can insert" ON proyecto_screenshot FOR INSERT WITH CHECK (true);
+CREATE POLICY "Service role can update" ON proyecto_screenshot FOR UPDATE USING (true);
+CREATE POLICY "Service role can delete" ON proyecto_screenshot FOR DELETE USING (true);

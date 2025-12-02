@@ -30,11 +30,13 @@ import {
     createTechnology,
     updateTechnology,
     deleteTechnology,
+    getLevels, // Importar servicio de niveles
 } from '../../../services/techService';
 import FileUploader from '../../../components/FileUploader';
 
 const Technologies = () => {
     const [technologies, setTechnologies] = useState([]);
+    const [niveles, setNiveles] = useState([]); // Estado para niveles dinámicos
     const [loading, setLoading] = useState(true);
     const [openDialog, setOpenDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -47,27 +49,33 @@ const Technologies = () => {
         es_skill: true,
     });
 
-    // Niveles predefinidos (1=Básico, 2=Intermedio, 3=Avanzado)
-    const niveles = [
-        { id: 1, nombre: 'Básico' },
-        { id: 2, nombre: 'Intermedio' },
-        { id: 3, nombre: 'Avanzado' },
-    ];
-
     useEffect(() => {
-        fetchTechnologies();
+        fetchData();
     }, []);
 
-    const fetchTechnologies = async () => {
+    const fetchData = async () => {
         try {
             setLoading(true);
-            const data = await getAllTechnologies();
-            setTechnologies(data);
+            const [techData, levelsData] = await Promise.all([
+                getAllTechnologies(),
+                getLevels()
+            ]);
+            setTechnologies(techData);
+            setNiveles(levelsData);
         } catch (error) {
-            toast.error('Error al cargar tecnologías');
+            toast.error('Error al cargar datos');
             console.error(error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchTechnologies = async () => {
+        try {
+            const data = await getAllTechnologies();
+            setTechnologies(data);
+        } catch (error) {
+            console.error('Error al recargar tecnologías:', error);
         }
     };
 
@@ -173,21 +181,26 @@ const Technologies = () => {
         {
             field: 'nivel_nombre',
             headerName: 'Nivel',
-            width: 130,
+            width: 150,
             renderCell: (params) => {
-                const colorMap = {
-                    'Básico': 'default',
-                    'Intermedio': 'primary',
-                    'Avanzado': 'secondary',
-                };
-                return params.value ? (
+                // Buscar el nombre del nivel en la lista dinámica si no viene en el row
+                // (Aunque el backend ya lo trae como nivel_nombre, esto es un fallback visual)
+                const nivelNombre = params.value || niveles.find(n => n.id === params.row.nivel_id)?.nombre || '-';
+
+                // Asignar colores basados en el texto (puedes ajustar esto según tus nombres de DB)
+                let color = 'default';
+                const nombreLower = String(nivelNombre).toLowerCase();
+
+                if (nombreLower.includes('básico') || nombreLower.includes('learning') || nombreLower.includes('trainee')) color = 'default';
+                else if (nombreLower.includes('intermedio') || nombreLower.includes('intermediate')) color = 'primary';
+                else if (nombreLower.includes('avanzado') || nombreLower.includes('advanced') || nombreLower.includes('senior')) color = 'secondary';
+
+                return (
                     <Chip
-                        label={params.value}
-                        color={colorMap[params.value] || 'default'}
+                        label={nivelNombre}
+                        color={color}
                         size="small"
                     />
-                ) : (
-                    <Typography variant="body2" color="text.secondary">-</Typography>
                 );
             },
         },
