@@ -4,6 +4,7 @@ import './About.scss';
 import { getInfo } from '../../services/infoService';
 import { getSkills } from '../../services/techService';
 import { getAllEducation } from '../../services/educationService';
+import { normalizeFileUrl } from '../../utils/urlUtils';
 
 const About = () => {
   const navigate = useNavigate();

@@ -4,6 +4,7 @@ import ProjectCard from "../../components/ProjectCard";
 import { calculateFreelanceExperience } from "../../utils/dateUtils";
 import { getFeaturedProjects } from "../../services/projectService";
 import { getInfo } from "../../services/infoService";
+import { normalizeFileUrl } from "../../utils/urlUtils";
 
 function Home() {
   // Fecha de inicio como freelance: 1 de Marzo de 2025
@@ -84,7 +85,7 @@ function Home() {
               Contactar
             </a>
             {info?.cv_url && (
-              <a href={info.cv_url} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-cv">
+              <a href={normalizeFileUrl(info.cv_url)} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-cv">
                 <i className="fas fa-eye"></i>
                 Ver CV
               </a>
