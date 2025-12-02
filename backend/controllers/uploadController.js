@@ -39,9 +39,16 @@ const uploadToSupabase = async (file, bucket) => {
     .from(bucket)
     .getPublicUrl(fileName);
 
+  const finalUrl = publicUrlData.publicUrl;
+  console.log('🔍 DEBUG uploadToSupabase:');
+  console.log('  - fileName:', fileName);
+  console.log('  - bucket:', bucket);
+  console.log('  - publicUrl:', finalUrl);
+  console.log('  - URL válida?', /^https?:\/\//i.test(finalUrl));
+
   return {
     path: data.path,
-    url: publicUrlData.publicUrl,
+    url: finalUrl,
     fileName: fileName,
   };
 };
@@ -133,6 +140,11 @@ export const uploadDocument = async (req, res) => {
       result = uploadToLocal(req.file, 'documentos');
       console.log('✅ Documento subido a almacenamiento local');
     }
+
+    console.log('📤 DEBUG uploadDocument response:', {
+      url: result.url,
+      fileName: result.fileName
+    });
 
     res.status(200).json({
       message: 'Documento subido exitosamente',
