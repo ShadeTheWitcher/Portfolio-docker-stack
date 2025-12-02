@@ -12,15 +12,25 @@ const Contacto = () => {
 
   useEffect(() => {
     const fetchContactInfo = async () => {
+      const timeout = setTimeout(() => {
+        console.warn('⏱️ API tardó demasiado, usando datos mock en Contacto');
+        setContactInfo(MOCK_INFO);
+        setUsingMockData(true);
+        setLoading(false);
+      }, 5000);
+
       try {
         setLoading(true);
         const data = await getInfo();
+        clearTimeout(timeout);
         console.log('📧 Información de contacto recibida:', data);
-        console.log('📧 Email específicamente:', data?.email);
-        setContactInfo(data);
-        setError(null);
-        setUsingMockData(false);
+        if (data) {
+          setContactInfo(data);
+          setError(null);
+          setUsingMockData(false);
+        }
       } catch (err) {
+        clearTimeout(timeout);
         console.error('❌ Error al cargar información de contacto:', err);
         setError('No se pudo cargar la información de contacto');
         // Usar datos mock como fallback
@@ -46,30 +56,43 @@ const Contacto = () => {
     return (
       <section className="seccion-contacto">
         <div className="container">
-          <div className="loading-state" style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '60vh',
-            flexDirection: 'column'
-          }}>
-            <div className="spinner" style={{
-              border: '4px solid rgba(255, 255, 255, 0.1)',
-              borderTop: '4px solid #007bff',
-              borderRadius: '50%',
-              width: '50px',
-              height: '50px',
-              animation: 'spin 1s linear infinite',
-              marginBottom: '1rem'
-            }}></div>
-            <p style={{ color: '#666', fontSize: '1.1rem' }}>Cargando información de contacto...</p>
+          <div className="contact-card" style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+              <Skeleton variant="title" width="300px" height="40px" />
+            </div>
+
+            <div className="email-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+              <Skeleton variant="circle" width="60px" height="60px" />
+              <Skeleton variant="text" width="200px" height="24px" />
+              <Skeleton variant="text" width="250px" height="20px" />
+              <div className="button-group" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <Skeleton variant="button" width="120px" height="40px" />
+                <Skeleton variant="button" width="140px" height="40px" />
+              </div>
+            </div>
+
+            <div className="divider" style={{ margin: '2rem 0' }}>
+              <Skeleton variant="text" width="150px" />
+            </div>
+
+            <div className="social-section social-section-responsive" style={{ display: 'grid', gap: '1rem' }}>
+              {[1, 2, 3].map(i => (
+                <div key={i} style={{ padding: '1rem', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.05)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                    <Skeleton variant="circle" width="50px" height="50px" />
+                    <Skeleton variant="text" width="100px" />
+                    <Skeleton variant="text" width="120px" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
     );
   }
 
-  if (error) {
+  if (error && !usingMockData) {
     return (
       <section className="seccion-contacto">
         <div className="container">

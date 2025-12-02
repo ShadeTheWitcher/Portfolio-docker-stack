@@ -2,10 +2,10 @@
 export const MOCK_INFO = {
   nombre: 'Lovato',
   apellido: 'Matias',
-  email: 'demo@ejemplo.com',
+  email: 'matias.lovato.dev@gmail.com',
   telefono: '+1234567890',
-  linkedin: 'https://linkedin.com',
-  github: 'https://github.com',
+  linkedin: 'https://www.linkedin.com/in/lovato-matias-shade/',
+  github: 'https://github.com/ShadeTheWitcher',
   descripcion: 'Esta es información de muestra. Configura tu perfil en el panel de administración para ver tus datos reales.',
   texto_home: 'Desarrollador apasionado por crear experiencias web modernas. Esta es información de ejemplo.',
   cv_url: '',
