@@ -1,0 +1,70 @@
+# ====================================
+# DOCKER COMPOSE PARA DESARROLLO LOCAL
+# ====================================
+# Este archivo es una versión simplificada para desarrollo local
+# sin Traefik, sin SSL, y sin necesidad de Supabase.
+# 
+# Para usar este archivo:
+#   docker compose -f docker-compose.local.yml up --build -d
+#
+# Para detenerlo:
+#   docker compose -f docker-compose.local.yml down
+# ====================================
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    environment:
+      REACT_APP_API_URL: "http://localhost:4000/api"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      # Base de datos
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_HOST: db
+      DB_NAME: ${POSTGRES_DB:-portfolio}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-example}
+      DB_PORT: 5432
+      DATABASE_URL: "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-example}@db:5432/${POSTGRES_DB:-portfolio}"
+      # Servidor
+      PORT: 4000
+      NODE_ENV: ${NODE_ENV:-development}
+      # JWT
+      JWT_SECRET: ${JWT_SECRET:-tu_clave_secreta_super_segura_cambiame_en_produccion_2024}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      # Supabase (opcional - si no se configura, usa almacenamiento local)
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY:-}
+      SUPABASE_IMAGES_BUCKET: ${SUPABASE_IMAGES_BUCKET:-imagenes}
+      SUPABASE_DOCUMENTS_BUCKET: ${SUPABASE_DOCUMENTS_BUCKET:-documentos}
+    depends_on:
+      - db
+    volumes:
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-example}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./db/seed_data.sql:/docker-entrypoint-initdb.d/02-seed_data.sql
+      - pgdata_local:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata_local:
