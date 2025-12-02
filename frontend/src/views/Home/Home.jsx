@@ -28,7 +28,7 @@ function Home() {
         setProjects(MOCK_PROJECTS);
         setUsingMockProjects(true);
         setLoading(false);
-      }, 5000);
+      }, 10000);
 
       try {
         setLoading(true);
@@ -64,7 +64,7 @@ function Home() {
         console.warn('⏱️ API tardó demasiado, usando datos mock para info');
         setInfo(MOCK_INFO);
         setUsingMockInfo(true);
-      }, 5000);
+      }, 10000);
 
       try {
         const data = await getInfo();

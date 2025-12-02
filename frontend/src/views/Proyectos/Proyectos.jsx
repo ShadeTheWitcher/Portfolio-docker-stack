@@ -18,7 +18,7 @@ function Proyectos() {
         setProjects(MOCK_PROJECTS);
         setUsingMockData(true);
         setLoading(false);
-      }, 5000);
+      }, 10000);
 
       try {
         setLoading(true);

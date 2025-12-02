@@ -17,7 +17,7 @@ const Contacto = () => {
         setContactInfo(MOCK_INFO);
         setUsingMockData(true);
         setLoading(false);
-      }, 5000);
+      }, 10000);
 
       try {
         setLoading(true);
