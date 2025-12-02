@@ -12,19 +12,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuración de la conexión
-const connectionString = process.env.DATABASE_URL;
+// Puedes editar estos valores directamente con los datos de Render/DBeaver
+const pool = new Pool({
+  user: 'shade125', // Tu usuario de Render
+  password: '...', // Tu contraseña de Render (la que usas en DBeaver)
+  host: 'dpg-d4m3afogjchc73b159q0-a.oregon-postgres.render.com', // Tu host de Render
+  port: 5432,
+  database: 'portfolio_m6oq', // Tu base de datos
+  ssl: { rejectUnauthorized: false } // Necesario para Render
+});
 
-if (!connectionString) {
-  console.error('❌ Error: DATABASE_URL no está definida en el archivo .env');
-  process.exit(1);
-}
-
+// Si prefieres usar la URL de entorno o argumento, descomenta esto y comenta lo de arriba:
+/*
+const connectionString = process.argv[2] || process.env.DATABASE_URL;
 const pool = new Pool({
   connectionString,
-  ssl: {
-    rejectUnauthorized: false // Necesario para algunas conexiones remotas como Render/Supabase
-  }
+  ssl: { rejectUnauthorized: false }
 });
+*/
 
 async function exportData() {
   try {
