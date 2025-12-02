@@ -5,6 +5,8 @@ import { getInfo } from '../../services/infoService';
 import { getSkills } from '../../services/techService';
 import { getAllEducation } from '../../services/educationService';
 import { normalizeFileUrl } from '../../utils/urlUtils';
+import Skeleton from '../../components/Skeleton';
+import { MOCK_INFO, MOCK_SKILLS, MOCK_EDUCATION, MockDataBanner } from '../../utils/mockData';
 
 const About = () => {
   const navigate = useNavigate();
@@ -13,9 +15,19 @@ const About = () => {
   const [education, setEducation] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [usingMockData, setUsingMockData] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      const timeout = setTimeout(() => {
+        console.warn('⏱️ API tardó demasiado, usando datos mock en About');
+        setInfo(MOCK_INFO);
+        setSkills(MOCK_SKILLS);
+        setEducation(MOCK_EDUCATION);
+        setUsingMockData(true);
+        setLoading(false);
+      }, 5000);
+
       try {
         setLoading(true);
         const [infoData, skillsData, educationData] = await Promise.all([
@@ -24,13 +36,21 @@ const About = () => {
           getAllEducation()
         ]);
 
+        clearTimeout(timeout);
         setInfo(infoData);
         setSkills(skillsData);
         setEducation(educationData);
         setError(null);
+        setUsingMockData(false);
       } catch (err) {
+        clearTimeout(timeout);
         console.error('Error al cargar datos:', err);
         setError('No se pudieron cargar los datos');
+        // Fallback a mock data
+        setInfo(MOCK_INFO);
+        setSkills(MOCK_SKILLS);
+        setEducation(MOCK_EDUCATION);
+        setUsingMockData(true);
       } finally {
         setLoading(false);
       }
@@ -46,15 +66,58 @@ const About = () => {
   if (loading) {
     return (
       <section className="about-container">
-        <div className="loading-state">
-          <div className="spinner"></div>
-          <p>Cargando información...</p>
+        <div className="about-header">
+          <Skeleton variant="title" width="200px" />
+        </div>
+
+        <div className="profile-bio-wrapper">
+          <div className="profile-card">
+            <div className="profile-image-wrapper">
+              <Skeleton variant="circle" width="150px" height="150px" />
+            </div>
+            <div className="profile-info" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Skeleton variant="text" width="60%" height="30px" />
+              <div className="profile-badges" style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+                <Skeleton variant="button" width="100px" />
+                <Skeleton variant="button" width="100px" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bio-card">
+            <Skeleton variant="title" width="150px" />
+            <div style={{ marginTop: '1rem' }}>
+              <Skeleton variant="text" count={4} />
+            </div>
+            <div className="bio-actions" style={{ marginTop: '2rem' }}>
+              <Skeleton variant="button" width="140px" />
+              <Skeleton variant="button" width="140px" />
+            </div>
+          </div>
+        </div>
+
+        <div className="skills-education-grid">
+          <div className="skills-section">
+            <Skeleton variant="title" width="200px" />
+            <div className="skills-grid" style={{ marginTop: '1.5rem' }}>
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <Skeleton key={i} variant="card" height="100px" />
+              ))}
+            </div>
+          </div>
+          <div className="education-section">
+            <Skeleton variant="title" width="200px" />
+            <div className="education-list" style={{ marginTop: '1.5rem' }}>
+              <Skeleton variant="card" height="120px" />
+              <Skeleton variant="card" height="120px" />
+            </div>
+          </div>
         </div>
       </section>
     );
   }
 
-  if (error) {
+  if (error && !usingMockData) {
     return (
       <section className="about-container">
         <div className="error-state">
@@ -72,6 +135,8 @@ const About = () => {
         <h1 className="about-title">Sobre Mí</h1>
         <div className="title-underline"></div>
       </div>
+
+      {usingMockData && <MockDataBanner />}
 
       {/* Profile & Bio */}
       <div className="profile-bio-wrapper">

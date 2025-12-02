@@ -1,23 +1,39 @@
 import React, { useState, useEffect } from "react";
 import './Proyectos.scss';
 import ProjectCard from "../../components/ProjectCard";
+import Skeleton from "../../components/Skeleton";
 import { getAllProjects } from "../../services/projectService";
+import { MOCK_PROJECTS, MockDataBanner } from "../../utils/mockData";
 
 function Proyectos() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [usingMockData, setUsingMockData] = useState(false);
 
   useEffect(() => {
     const fetchProjects = async () => {
+      const timeout = setTimeout(() => {
+        console.warn('⏱️ API tardó demasiado, usando datos mock en Proyectos');
+        setProjects(MOCK_PROJECTS);
+        setUsingMockData(true);
+        setLoading(false);
+      }, 5000);
+
       try {
         setLoading(true);
         const data = await getAllProjects();
+        clearTimeout(timeout);
         setProjects(data);
         setError(null);
+        setUsingMockData(false);
       } catch (err) {
+        clearTimeout(timeout);
         console.error('Error al cargar proyectos:', err);
         setError('No se pudieron cargar los proyectos');
+        // Fallback a mock data
+        setProjects(MOCK_PROJECTS);
+        setUsingMockData(true);
       } finally {
         setLoading(false);
       }
@@ -37,21 +53,28 @@ function Proyectos() {
         <div className="title-underline"></div>
       </div>
 
+      {usingMockData && <MockDataBanner />}
+
       {loading && (
-        <div className="loading-state">
-          <div className="loader"></div>
-          <p>Cargando proyectos...</p>
+        <div className="projects-grid">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} style={{ padding: '1rem' }}>
+              <Skeleton variant="card" height="300px" />
+              <Skeleton variant="title" width="80%" />
+              <Skeleton variant="text" width="100%" count={2} />
+            </div>
+          ))}
         </div>
       )}
 
-      {error && (
+      {error && !usingMockData && (
         <div className="error-state">
           <i className="fas fa-exclamation-circle"></i>
           <p>{error}</p>
         </div>
       )}
 
-      {!loading && !error && projects.length === 0 && (
+      {!loading && !error && projects.length === 0 && !usingMockData && (
         <div className="empty-state">
           <i className="fas fa-folder-open"></i>
           <p>No hay proyectos disponibles</p>
@@ -61,7 +84,7 @@ function Proyectos() {
         </div>
       )}
 
-      {!loading && !error && projects.length > 0 && (
+      {!loading && projects.length > 0 && (
         <>
           <div className="projects-grid">
             {projects.map((project) => (
