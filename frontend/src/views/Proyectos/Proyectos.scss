@@ -1,0 +1,241 @@
+.proyectos-container {
+    min-height: 100vh;
+    background: #0f0f0f;
+    color: #fff;
+    padding: 4rem 2rem;
+}
+
+.proyectos-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeInDown 0.6s ease-out;
+
+    .proyectos-title {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff, #ccc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+    }
+
+    .proyectos-subtitle {
+        font-size: 1.1rem;
+        color: #888;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .title-underline {
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #ff0077, #7700ff);
+        margin: 0 auto;
+        border-radius: 2px;
+    }
+}
+
+.projects-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+    padding: 0 1rem;
+}
+
+/* Estados de carga, error y vacío */
+.loading-state,
+.error-state,
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+    padding: 2rem;
+
+    i {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.5;
+    }
+
+    p {
+        font-size: 1.2rem;
+        color: #888;
+        margin-bottom: 1rem;
+    }
+
+    .loader {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #2a2a2a;
+        border-top-color: #ff0077;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+
+    .btn-contact {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #ff0077, #d60065);
+        color: white;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 0, 119, 0.4);
+        }
+    }
+}
+
+.error-state {
+    i {
+        color: #ff0077;
+        opacity: 0.8;
+    }
+
+    p {
+        color: #ff0077;
+    }
+}
+
+.empty-state {
+    i {
+        color: #666;
+    }
+}
+
+.projects-footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid #2a2a2a;
+    animation: fadeInUp 1s ease-out;
+
+    .footer-text {
+        font-size: 1.2rem;
+        color: #aaa;
+
+        a {
+            color: #ff0077;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: #ff0077;
+                transition: width 0.3s ease;
+            }
+
+            &:hover {
+                color: #d60065;
+
+                &::after {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .proyectos-container {
+        padding: 3rem 1rem;
+    }
+
+    .proyectos-header {
+        margin-bottom: 3rem;
+
+        .proyectos-title {
+            font-size: 2rem;
+        }
+
+        .proyectos-subtitle {
+            font-size: 1rem;
+        }
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0;
+    }
+
+    .projects-footer {
+        margin-top: 3rem;
+        padding-top: 2rem;
+
+        .footer-text {
+            font-size: 1rem;
+        }
+    }
+
+    .loading-state,
+    .error-state,
+    .empty-state {
+        min-height: 300px;
+
+        i {
+            font-size: 3rem;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+    }
+}

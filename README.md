@@ -174,4 +174,10 @@ Persistencia en el volumen:
 
 ------------------------------------------------------------------------
 
+### Como cambiar el url de la api (REACT_APP_API_URL)sin hacer denuevo la build
 
+``` sh
+# luego de cambiar en el docker compose la REACT_APP_API_URL ejecutar:
+docker compose up -d --force-recreate frontend
+
+```

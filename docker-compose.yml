@@ -1,27 +1,92 @@
+# ====================================
+# VARIABLES DE CONFIGURACIÓN
+# ====================================
+# Las variables se leen del archivo .env en la raíz del proyecto
+# Copia .env.example a .env y modifica según tu entorno:
+# - Para PRODUCCIÓN: usa tu dominio (ej: shade125.ddns.net, api.shade125.ddns.net)
+# - Para DESARROLLO LOCAL: usa localhost (ej: localhost, api.localhost o ambos localhost)
+# Pueden ser la misma URL para ambos si no tienes un dominio con wildcard
+# ====================================
 
 services:
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.le.acme.httpchallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.le.acme.email=${ACME_EMAIL:-shadethewitcher@gmail.com}" #cambiar correo
+      - "--certificatesresolvers.le.acme.storage=/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./acme.json:/acme.json"
+    restart: unless-stopped
+
   frontend:
     build: ./frontend
-    ports:
-      - "3000:80"
+    expose:
+      - "80"
     environment:
-      REACT_APP_API_URL: "http://localhost:4000"  # dinámico dentro de la red de Docker
+      REACT_APP_API_URL: "https://${BACKEND_DOMAIN:-localhost}/api" # :4000/api    cambiar de http a https si es entorno producción
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.rule=Host(`${FRONTEND_DOMAIN:-localhost}`)" 
+      - "traefik.http.routers.front.entrypoints=websecure"
+      - "traefik.http.routers.front.tls.certresolver=le"
+      - "traefik.http.services.front.loadbalancer.server.port=80"
     depends_on:
       - backend
+    restart: unless-stopped
 
   backend:
     build: ./backend
-    ports:
-      - "4000:4000"
+    expose:
+      - "4000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`${BACKEND_DOMAIN:-localhost}`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=le"
+      - "traefik.http.services.api.loadbalancer.server.port=4000"
+    environment:
+      # Base de datos
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_HOST: db
+      DB_NAME: ${POSTGRES_DB:-portfolio}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-example}
+      DB_PORT: 5432
+      DATABASE_URL: "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-example}@db:5432/${POSTGRES_DB:-portfolio}"
+      # Servidor
+      PORT: 4000
+      NODE_ENV: ${NODE_ENV:-production}
+      # JWT
+      JWT_SECRET: ${JWT_SECRET:-tu_clave_secreta_super_segura_cambiame_en_produccion_2024}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+    depends_on:
+      - db
+    volumes:
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
 
   db:
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: portfolio
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: example
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-example}
+    ports:
+      - "5432:5432"
     volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./db/seed_data.sql:/docker-entrypoint-initdb.d/02-seed_data.sql
       - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
 
 volumes:
   pgdata:
