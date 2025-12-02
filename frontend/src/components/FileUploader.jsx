@@ -31,7 +31,7 @@ const FileUploader = ({
     type = "image", // "image" o "document"
     helperText = ""
 }) => {
-    const [mode, setMode] = useState(value && value.startsWith('http') ? 'url' : 'file');
+    const [mode, setMode] = useState(value && /^https?:\/\//i.test(value) ? 'url' : 'file');
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState(value || '');
 
@@ -74,9 +74,13 @@ const FileUploader = ({
                 }
             });
 
-            // Detectar si es URL completa (Supabase) o ruta relativa (local)
+            // Detectar si es URL completa (Supabase/externa) o ruta relativa (local)
             let fileUrl = response.data.url;
-            if (!fileUrl.startsWith('http')) {
+
+            // Verificar si es una URL absoluta (comienza con http:// o https://)
+            const isAbsoluteUrl = /^https?:\/\//i.test(fileUrl);
+
+            if (!isAbsoluteUrl) {
                 // Es ruta local, concatenar con URL del backend
                 fileUrl = `${api.defaults.baseURL.replace('/api', '')}${fileUrl}`;
             }
