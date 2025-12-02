@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import './Contacto.scss';
 import { getInfo } from '../../services/infoService';
 
@@ -12,10 +12,12 @@ const Contacto = () => {
       try {
         setLoading(true);
         const data = await getInfo();
+        console.log('📧 Información de contacto recibida:', data);
+        console.log('📧 Email específicamente:', data?.email);
         setContactInfo(data);
         setError(null);
       } catch (err) {
-        console.error('Error al cargar información de contacto:', err);
+        console.error('❌ Error al cargar información de contacto:', err);
         setError('No se pudo cargar la información de contacto');
       } finally {
         setLoading(false);
@@ -36,8 +38,25 @@ const Contacto = () => {
   if (loading) {
     return (
       <section className="seccion-contacto">
-        <div className="loading-state">
-          <p>Cargando información de contacto...</p>
+        <div className="container">
+          <div className="loading-state" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '60vh',
+            flexDirection: 'column'
+          }}>
+            <div className="spinner" style={{
+              border: '4px solid rgba(255, 255, 255, 0.1)',
+              borderTop: '4px solid #007bff',
+              borderRadius: '50%',
+              width: '50px',
+              height: '50px',
+              animation: 'spin 1s linear infinite',
+              marginBottom: '1rem'
+            }}></div>
+            <p style={{ color: '#666', fontSize: '1.1rem' }}>Cargando información de contacto...</p>
+          </div>
         </div>
       </section>
     );
@@ -46,8 +65,18 @@ const Contacto = () => {
   if (error) {
     return (
       <section className="seccion-contacto">
-        <div className="error-state">
-          <p>{error}</p>
+        <div className="container">
+          <div className="error-state" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '60vh',
+            flexDirection: 'column',
+            textAlign: 'center'
+          }}>
+            <i className="fas fa-exclamation-circle" style={{ fontSize: '3rem', color: '#dc3545', marginBottom: '1rem' }}></i>
+            <p style={{ color: '#dc3545', fontSize: '1.1rem' }}>{error}</p>
+          </div>
         </div>
       </section>
     );
@@ -63,7 +92,7 @@ const Contacto = () => {
             <div className="contact-card">
 
               {/* Sección de Email */}
-              {contactInfo?.email && (
+              {contactInfo?.email ? (
                 <div className="email-section">
                   <div className="icon-wrapper">
                     <i className="fas fa-envelope"></i>
@@ -86,6 +115,14 @@ const Contacto = () => {
                       <span>Enviar Email</span>
                     </a>
                   </div>
+                </div>
+              ) : (
+                <div className="email-section" style={{ textAlign: 'center', padding: '2rem', background: '#fff3cd', borderRadius: '8px' }}>
+                  <i className="fas fa-exclamation-triangle" style={{ fontSize: '2rem', color: '#856404', marginBottom: '1rem' }}></i>
+                  <h3 style={{ color: '#856404' }}>Email no configurado</h3>
+                  <p style={{ color: '#856404' }}>
+                    Por favor, configura tu email en el panel de administración (Perfil).
+                  </p>
                 </div>
               )}
 
@@ -146,7 +183,7 @@ const Contacto = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

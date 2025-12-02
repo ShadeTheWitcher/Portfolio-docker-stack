@@ -43,11 +43,12 @@ function Home() {
     const fetchInfo = async () => {
       try {
         const data = await getInfo();
+        console.log('🏠 Información personal cargada en Home:', data);
         if (data) {
           setInfo(data);
         }
       } catch (err) {
-        console.error('Error al cargar información:', err);
+        console.error('❌ Error al cargar información en Home:', err);
       }
     };
     fetchInfo();
@@ -64,7 +65,9 @@ function Home() {
           </div>
 
           <h1 className="hero-title">
-            <span className="name-highlight">Lovato Matias</span>
+            <span className="name-highlight">
+              {info ? `${info.nombre} ${info.apellido}` : 'Cargando...'}
+            </span>
           </h1>
 
           <h2 className="hero-subtitle">
@@ -99,7 +102,7 @@ function Home() {
               <div className="stat-label">{freelanceExp.label}</div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">5+</div>
+              <div className="stat-number">{projects.length || 0}+</div>
               <div className="stat-label">Proyectos Realizados</div>
             </div>
             <div className="stat-item">
@@ -119,15 +122,21 @@ function Home() {
 
       {/* Social Links */}
       <div className="social-floating">
-        <a href="https://github.com/ShadeTheWitcher" target="_blank" rel="noopener noreferrer" className="social-link github">
-          <i className="fa-brands fa-github"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/lovato-matias-shade/" target="_blank" rel="noopener noreferrer" className="social-link linkedin">
-          <i className="fab fa-linkedin"></i>
-        </a>
-        <a href="mailto:matii_seba_11@hotmail.com" className="social-link email">
-          <i className="fas fa-envelope"></i>
-        </a>
+        {info?.github && (
+          <a href={info.github} target="_blank" rel="noopener noreferrer" className="social-link github">
+            <i className="fa-brands fa-github"></i>
+          </a>
+        )}
+        {info?.linkedin && (
+          <a href={info.linkedin} target="_blank" rel="noopener noreferrer" className="social-link linkedin">
+            <i className="fab fa-linkedin"></i>
+          </a>
+        )}
+        {info?.email && (
+          <a href={`mailto:${info.email}`} className="social-link email">
+            <i className="fas fa-envelope"></i>
+          </a>
+        )}
       </div>
 
       {/* Proyectos Destacados */}
