@@ -673,4 +673,4 @@ Este proyecto es de código abierto. Siéntete libre de usarlo y modificarlo seg
 
 **ShadeTheWitcher**
 - GitHub: [@ShadeTheWitcher](https://github.com/ShadeTheWitcher)
-- Email: shadethewitcher@gmail.com
+- Email: matias.lovato.dev@gmail.com
