@@ -85,6 +85,9 @@ function Home() {
     fetchInfo();
   }, []);
 
+  // Filtrar proyectos destacados para la vista
+  const featuredProjects = projects.filter(p => p.destacado === 'SI' || p.destacado === true);
+
   return (
     <section className="home-container">
       {/* Hero Section */}
@@ -194,10 +197,10 @@ function Home() {
         )}
 
         {/* Proyectos cargados */}
-        {!loading && projects.length > 0 && (
+        {!loading && featuredProjects.length > 0 && (
           <>
             <div className="projects-grid">
-              {projects.filter(p => p.destacado === 'SI' || p.destacado === true).map((proyect) => (
+              {featuredProjects.map((proyect) => (
                 <ProjectCard key={proyect.id_proyect} proyect={proyect} />
               ))}
             </div>
@@ -212,7 +215,7 @@ function Home() {
         )}
 
         {/* Sin proyectos */}
-        {!loading && projects.length === 0 && !usingMockProjects && (
+        {!loading && featuredProjects.length === 0 && !usingMockProjects && (
           <div className="empty-state">
             <p>No hay proyectos destacados disponibles</p>
           </div>

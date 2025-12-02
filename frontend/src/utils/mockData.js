@@ -15,58 +15,78 @@ export const MOCK_INFO = {
 export const MOCK_PROJECTS = [
   {
     id_proyect: 1,
-    titulo: 'Proyecto Demo 1',
+    name_proyect: 'Proyecto Demo 1',
     descripcion: 'Este es un proyecto de ejemplo. Agrega tus proyectos reales desde el panel de administración.',
-    tecnologias: ['React', 'Node.js', 'PostgreSQL'],
-    url_repositorio: 'https://github.com',
-    url_demo: '',
-    imagen_principal: '',
-    destacado: true,
+    tecnologias: [
+      { nombre: 'React', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+      { nombre: 'Node.js', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' }
+    ],
+    link_github: 'https://github.com',
+    link_web: '',
+    imagen: '',
+    destacado: 'SI',
     fecha_inicio: '2024-01-01',
     fecha_fin: null
   },
   {
     id_proyect: 2,
-    titulo: 'Proyecto Demo 2',
+    name_proyect: 'Proyecto Demo 2',
     descripcion: 'Otro proyecto de muestra para demostrar el diseño.',
-    tecnologias: ['JavaScript', 'CSS', 'HTML'],
-    url_repositorio: 'https://github.com',
-    url_demo: '',
-    imagen_principal: '',
-    destacado: true,
+    tecnologias: [
+      { nombre: 'JavaScript', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+      { nombre: 'CSS', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' }
+    ],
+    link_github: 'https://github.com',
+    link_web: '',
+    imagen: '',
+    destacado: 'SI',
     fecha_inicio: '2024-02-01',
     fecha_fin: null
   },
   {
     id_proyect: 3,
-    titulo: 'Proyecto Demo 3',
+    name_proyect: 'Proyecto Demo 3',
     descripcion: 'Tercer proyecto de ejemplo.',
-    tecnologias: ['Vue.js', 'Express'],
-    url_repositorio: 'https://github.com',
-    url_demo: '',
-    imagen_principal: '',
-    destacado: true,
+    tecnologias: [
+      { nombre: 'Vue.js', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg' }
+    ],
+    link_github: 'https://github.com',
+    link_web: '',
+    imagen: '',
+    destacado: 'SI',
     fecha_inicio: '2024-03-01',
     fecha_fin: null
   }
 ];
 
 export const MOCK_SKILLS = [
-  { id: 1, nombre: 'JavaScript', nivel: 'Avanzado', categoria: 'Frontend' },
-  { id: 2, nombre: 'React', nivel: 'Avanzado', categoria: 'Frontend' },
-  { id: 3, nombre: 'Node.js', nivel: 'Intermedio', categoria: 'Backend' },
-  { id: 4, nombre: 'PostgreSQL', nivel: 'Intermedio', categoria: 'Database' },
-  { id: 5, nombre: 'Docker', nivel: 'Básico', categoria: 'DevOps' }
+  { id: 1, nombre_tec: 'JavaScript', nivel_nombre: 'Avanzado', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+  { id: 2, nombre_tec: 'React', nivel_nombre: 'Avanzado', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+  { id: 3, nombre_tec: 'Node.js', nivel_nombre: 'Intermedio', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+  { id: 4, nombre_tec: 'PostgreSQL', nivel_nombre: 'Intermedio', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
+  { id: 5, nombre_tec: 'Docker', nivel_nombre: 'Básico', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' }
 ];
 
-export const MOCK_CERTIFICATES = [
+export const MOCK_EDUCATION = [
   {
     id: 1,
-    titulo: 'Certificado Demo',
-    institucion: 'Plataforma de Ejemplo',
-    fecha_obtencion: '2024-01-01',
-    url_certificado: '',
-    imagen_certificado: ''
+    titulo: 'Ingeniería en Sistemas',
+    institucion: 'Universidad de Ejemplo',
+    fecha_inicio: '2020-01-01',
+    fecha_fin: '2024-12-01',
+    en_curso: 'NO',
+    descripcion: 'Formación académica completa en ciencias de la computación.',
+    certificado_url: ''
+  },
+  {
+    id: 2,
+    titulo: 'Full Stack Developer',
+    institucion: 'Bootcamp Demo',
+    fecha_inicio: '2023-01-01',
+    fecha_fin: null,
+    en_curso: 'SI',
+    descripcion: 'Curso intensivo de desarrollo web moderno.',
+    certificado_url: ''
   }
 ];
 
