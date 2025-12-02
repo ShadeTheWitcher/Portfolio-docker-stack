@@ -3,7 +3,7 @@ import './Home.scss';
 import ProjectCard from "../../components/ProjectCard";
 import Skeleton from "../../components/Skeleton";
 import { calculateFreelanceExperience } from "../../utils/dateUtils";
-import { getFeaturedProjects } from "../../services/projectService";
+import { getAllProjects } from "../../services/projectService";
 import { getInfo } from "../../services/infoService";
 import { normalizeFileUrl } from "../../utils/urlUtils";
 import { MOCK_INFO, MOCK_PROJECTS, MockDataBanner } from "../../utils/mockData";
@@ -32,7 +32,7 @@ function Home() {
 
       try {
         setLoading(true);
-        const data = await getFeaturedProjects();
+        const data = await getAllProjects();
         clearTimeout(timeout);
         setProjects(data);
         setError(null);
@@ -197,7 +197,7 @@ function Home() {
         {!loading && projects.length > 0 && (
           <>
             <div className="projects-grid">
-              {projects.map((proyect) => (
+              {projects.filter(p => p.destacado === 'SI' || p.destacado === true).map((proyect) => (
                 <ProjectCard key={proyect.id_proyect} proyect={proyect} />
               ))}
             </div>
