@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import './Home.scss';
 import ProjectCard from "../../components/ProjectCard";
+import Skeleton from "../../components/Skeleton";
 import { calculateFreelanceExperience } from "../../utils/dateUtils";
 import { getFeaturedProjects } from "../../services/projectService";
 import { getInfo } from "../../services/infoService";
 import { normalizeFileUrl } from "../../utils/urlUtils";
+import { MOCK_INFO, MOCK_PROJECTS, MockDataBanner } from "../../utils/mockData";
 
 function Home() {
   // Fecha de inicio como freelance: 1 de Marzo de 2025
@@ -15,18 +17,33 @@ function Home() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [usingMockProjects, setUsingMockProjects] = useState(false);
 
   // Cargar proyectos destacados
   useEffect(() => {
     const fetchProjects = async () => {
+      const timeout = setTimeout(() => {
+        // Si tarda más de 5 segundos, usar mock data
+        console.warn('⏱️ API tardó demasiado, usando datos mock');
+        setProjects(MOCK_PROJECTS);
+        setUsingMockProjects(true);
+        setLoading(false);
+      }, 5000);
+
       try {
         setLoading(true);
         const data = await getFeaturedProjects();
+        clearTimeout(timeout);
         setProjects(data);
         setError(null);
+        setUsingMockProjects(false);
       } catch (err) {
+        clearTimeout(timeout);
         console.error('Error al cargar proyectos:', err);
         setError('No se pudieron cargar los proyectos');
+        // Usar mock data como fallback
+        setProjects(MOCK_PROJECTS);
+        setUsingMockProjects(true);
       } finally {
         setLoading(false);
       }
@@ -37,18 +54,32 @@ function Home() {
 
   // Estado para información personal
   const [info, setInfo] = useState(null);
+  const [usingMockInfo, setUsingMockInfo] = useState(false);
 
   // Cargar información personal
   useEffect(() => {
     const fetchInfo = async () => {
+      const timeout = setTimeout(() => {
+        // Si tarda más de 5 segundos, usar mock data
+        console.warn('⏱️ API tardó demasiado, usando datos mock para info');
+        setInfo(MOCK_INFO);
+        setUsingMockInfo(true);
+      }, 5000);
+
       try {
         const data = await getInfo();
+        clearTimeout(timeout);
         console.log('🏠 Información personal cargada en Home:', data);
         if (data) {
           setInfo(data);
+          setUsingMockInfo(false);
         }
       } catch (err) {
+        clearTimeout(timeout);
         console.error('❌ Error al cargar información en Home:', err);
+        // Usar mock data como fallback
+        setInfo(MOCK_INFO);
+        setUsingMockInfo(true);
       }
     };
     fetchInfo();
@@ -66,7 +97,7 @@ function Home() {
 
           <h1 className="hero-title">
             <span className="name-highlight">
-              {info ? `${info.nombre} ${info.apellido}` : 'Cargando...'}
+              {info ? `${info.nombre} ${info.apellido}` : 'Lovato Matias'}
             </span>
           </h1>
 
@@ -146,25 +177,24 @@ function Home() {
           <p className="section-subtitle">Algunos de mis trabajos más recientes</p>
         </div>
 
+        {/* Banner de datos mock */}
+        {usingMockProjects && <MockDataBanner />}
+
+        {/* Skeleton mientras carga */}
         {loading && (
-          <div className="loading-state">
-            <p>Cargando proyectos...</p>
+          <div className="projects-grid">
+            {[1, 2, 3].map((i) => (
+              <div key={i} style={{ padding: '1rem' }}>
+                <Skeleton variant="card" height="300px" />
+                <Skeleton variant="title" width="80%" />
+                <Skeleton variant="text" width="100%" count={2} />
+              </div>
+            ))}
           </div>
         )}
 
-        {error && (
-          <div className="error-state">
-            <p>{error}</p>
-          </div>
-        )}
-
-        {!loading && !error && projects.length === 0 && (
-          <div className="empty-state">
-            <p>No hay proyectos destacados disponibles</p>
-          </div>
-        )}
-
-        {!loading && !error && projects.length > 0 && (
+        {/* Proyectos cargados */}
+        {!loading && projects.length > 0 && (
           <>
             <div className="projects-grid">
               {projects.map((proyect) => (
@@ -179,6 +209,13 @@ function Home() {
               </a>
             </div>
           </>
+        )}
+
+        {/* Sin proyectos */}
+        {!loading && projects.length === 0 && !usingMockProjects && (
+          <div className="empty-state">
+            <p>No hay proyectos destacados disponibles</p>
+          </div>
         )}
       </section>
     </section>

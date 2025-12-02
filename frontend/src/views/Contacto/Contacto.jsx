@@ -1,11 +1,14 @@
 ﻿import React, { useState, useEffect } from 'react';
 import './Contacto.scss';
 import { getInfo } from '../../services/infoService';
+import Skeleton from '../../components/Skeleton';
+import { MOCK_INFO, MockDataBanner } from '../../utils/mockData';
 
 const Contacto = () => {
   const [contactInfo, setContactInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [usingMockData, setUsingMockData] = useState(false);
 
   useEffect(() => {
     const fetchContactInfo = async () => {
@@ -16,9 +19,13 @@ const Contacto = () => {
         console.log('📧 Email específicamente:', data?.email);
         setContactInfo(data);
         setError(null);
+        setUsingMockData(false);
       } catch (err) {
         console.error('❌ Error al cargar información de contacto:', err);
         setError('No se pudo cargar la información de contacto');
+        // Usar datos mock como fallback
+        setContactInfo(MOCK_INFO);
+        setUsingMockData(true);
       } finally {
         setLoading(false);
       }
@@ -86,6 +93,9 @@ const Contacto = () => {
     <section className="seccion-contacto">
       <div className="container">
         <h1 className="contact-title">CONTÁCTAME</h1>
+
+        {/* Banner de datos mock */}
+        {usingMockData && <MockDataBanner />}
 
         <div className="row justify-content-center">
           <div className="col-lg-10">
