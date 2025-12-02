@@ -132,7 +132,7 @@ const Contacto = () => {
               </div>
 
               {/* Redes Sociales */}
-              <div className="social-section">
+              <div className="social-section social-section-responsive">
                 {contactInfo?.linkedin && (
                   <a
                     href={contactInfo.linkedin}

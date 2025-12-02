@@ -309,3 +309,28 @@
         }
     }
 }
+// Estilos responsive para social-section
+.social-section-responsive {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// Tablet: 2 columnas
+@media (max-width: 992px) {
+    .social-section-responsive {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 600px;
+    }
+}
+
+// Móvil: 1 columna
+@media (max-width: 768px) {
+    .social-section-responsive {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+}
