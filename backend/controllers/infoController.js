@@ -16,12 +16,20 @@ export const getInfo = async (req, res) => {
         linkedin: '',
         github: '',
         descripcion: '',
+        texto_home: '',
         cv_url: '',
         imagen_perfil: ''
       });
     }
 
     const info = result.rows[0];
+    
+    // Agregar headers para evitar caché
+    res.set({
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
     
     res.json({
       id: info.id,
@@ -129,7 +137,8 @@ export const updateInfo = async (req, res) => {
         github: info.github,
         descripcion: info.sobre_mi,
         texto_home: info.texto_home,
-        cv_url: info.cv_url
+        cv_url: info.cv_url,
+        imagen_perfil: info.imagen_perfil
       }
     });
 

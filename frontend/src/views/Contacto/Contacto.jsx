@@ -1,22 +1,41 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import './Contacto.scss';
 import { getInfo } from '../../services/infoService';
+import Skeleton from '../../components/Skeleton';
+import { MOCK_INFO, MockDataBanner } from '../../utils/mockData';
 
 const Contacto = () => {
   const [contactInfo, setContactInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [usingMockData, setUsingMockData] = useState(false);
 
   useEffect(() => {
     const fetchContactInfo = async () => {
+      const timeout = setTimeout(() => {
+        console.warn('⏱️ API tardó demasiado, usando datos mock en Contacto');
+        setContactInfo(MOCK_INFO);
+        setUsingMockData(true);
+        setLoading(false);
+      }, 10000);
+
       try {
         setLoading(true);
         const data = await getInfo();
-        setContactInfo(data);
-        setError(null);
+        clearTimeout(timeout);
+        console.log('📧 Información de contacto recibida:', data);
+        if (data) {
+          setContactInfo(data);
+          setError(null);
+          setUsingMockData(false);
+        }
       } catch (err) {
-        console.error('Error al cargar información de contacto:', err);
+        clearTimeout(timeout);
+        console.error('❌ Error al cargar información de contacto:', err);
         setError('No se pudo cargar la información de contacto');
+        // Usar datos mock como fallback
+        setContactInfo(MOCK_INFO);
+        setUsingMockData(true);
       } finally {
         setLoading(false);
       }
@@ -36,18 +55,58 @@ const Contacto = () => {
   if (loading) {
     return (
       <section className="seccion-contacto">
-        <div className="loading-state">
-          <p>Cargando información de contacto...</p>
+        <div className="container">
+          <div className="contact-card" style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+              <Skeleton variant="title" width="300px" height="40px" />
+            </div>
+
+            <div className="email-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+              <Skeleton variant="circle" width="60px" height="60px" />
+              <Skeleton variant="text" width="200px" height="24px" />
+              <Skeleton variant="text" width="250px" height="20px" />
+              <div className="button-group" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <Skeleton variant="button" width="120px" height="40px" />
+                <Skeleton variant="button" width="140px" height="40px" />
+              </div>
+            </div>
+
+            <div className="divider" style={{ margin: '2rem 0' }}>
+              <Skeleton variant="text" width="150px" />
+            </div>
+
+            <div className="social-section social-section-responsive" style={{ display: 'grid', gap: '1rem' }}>
+              {[1, 2, 3].map(i => (
+                <div key={i} style={{ padding: '1rem', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.05)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                    <Skeleton variant="circle" width="50px" height="50px" />
+                    <Skeleton variant="text" width="100px" />
+                    <Skeleton variant="text" width="120px" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     );
   }
 
-  if (error) {
+  if (error && !usingMockData) {
     return (
       <section className="seccion-contacto">
-        <div className="error-state">
-          <p>{error}</p>
+        <div className="container">
+          <div className="error-state" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '60vh',
+            flexDirection: 'column',
+            textAlign: 'center'
+          }}>
+            <i className="fas fa-exclamation-circle" style={{ fontSize: '3rem', color: '#dc3545', marginBottom: '1rem' }}></i>
+            <p style={{ color: '#dc3545', fontSize: '1.1rem' }}>{error}</p>
+          </div>
         </div>
       </section>
     );
@@ -58,12 +117,15 @@ const Contacto = () => {
       <div className="container">
         <h1 className="contact-title">CONTÁCTAME</h1>
 
+        {/* Banner de datos mock */}
+        {usingMockData && <MockDataBanner />}
+
         <div className="row justify-content-center">
           <div className="col-lg-10">
             <div className="contact-card">
 
               {/* Sección de Email */}
-              {contactInfo?.email && (
+              {contactInfo?.email ? (
                 <div className="email-section">
                   <div className="icon-wrapper">
                     <i className="fas fa-envelope"></i>
@@ -87,6 +149,14 @@ const Contacto = () => {
                     </a>
                   </div>
                 </div>
+              ) : (
+                <div className="email-section" style={{ textAlign: 'center', padding: '2rem', background: '#fff3cd', borderRadius: '8px' }}>
+                  <i className="fas fa-exclamation-triangle" style={{ fontSize: '2rem', color: '#856404', marginBottom: '1rem' }}></i>
+                  <h3 style={{ color: '#856404' }}>Email no configurado</h3>
+                  <p style={{ color: '#856404' }}>
+                    Por favor, configura tu email en el panel de administración (Perfil).
+                  </p>
+                </div>
               )}
 
               {/* Divisor */}
@@ -95,7 +165,7 @@ const Contacto = () => {
               </div>
 
               {/* Redes Sociales */}
-              <div className="social-section">
+              <div className="social-section social-section-responsive">
                 {contactInfo?.linkedin && (
                   <a
                     href={contactInfo.linkedin}
@@ -146,7 +216,7 @@ const Contacto = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

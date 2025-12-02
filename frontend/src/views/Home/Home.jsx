@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import './Home.scss';
 import ProjectCard from "../../components/ProjectCard";
+import Skeleton from "../../components/Skeleton";
 import { calculateFreelanceExperience } from "../../utils/dateUtils";
-import { getFeaturedProjects } from "../../services/projectService";
+import { getAllProjects } from "../../services/projectService";
 import { getInfo } from "../../services/infoService";
 import { normalizeFileUrl } from "../../utils/urlUtils";
+import { MOCK_INFO, MOCK_PROJECTS, MockDataBanner } from "../../utils/mockData";
 
 function Home() {
   // Fecha de inicio como freelance: 1 de Marzo de 2025
@@ -15,18 +17,33 @@ function Home() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [usingMockProjects, setUsingMockProjects] = useState(false);
 
   // Cargar proyectos destacados
   useEffect(() => {
     const fetchProjects = async () => {
+      const timeout = setTimeout(() => {
+        // Si tarda más de 5 segundos, usar mock data
+        console.warn('⏱️ API tardó demasiado, usando datos mock');
+        setProjects(MOCK_PROJECTS);
+        setUsingMockProjects(true);
+        setLoading(false);
+      }, 10000);
+
       try {
         setLoading(true);
-        const data = await getFeaturedProjects();
+        const data = await getAllProjects();
+        clearTimeout(timeout);
         setProjects(data);
         setError(null);
+        setUsingMockProjects(false);
       } catch (err) {
+        clearTimeout(timeout);
         console.error('Error al cargar proyectos:', err);
         setError('No se pudieron cargar los proyectos');
+        // Usar mock data como fallback
+        setProjects(MOCK_PROJECTS);
+        setUsingMockProjects(true);
       } finally {
         setLoading(false);
       }
@@ -37,21 +54,39 @@ function Home() {
 
   // Estado para información personal
   const [info, setInfo] = useState(null);
+  const [usingMockInfo, setUsingMockInfo] = useState(false);
 
   // Cargar información personal
   useEffect(() => {
     const fetchInfo = async () => {
+      const timeout = setTimeout(() => {
+        // Si tarda más de 5 segundos, usar mock data
+        console.warn('⏱️ API tardó demasiado, usando datos mock para info');
+        setInfo(MOCK_INFO);
+        setUsingMockInfo(true);
+      }, 10000);
+
       try {
         const data = await getInfo();
+        clearTimeout(timeout);
+        console.log('🏠 Información personal cargada en Home:', data);
         if (data) {
           setInfo(data);
+          setUsingMockInfo(false);
         }
       } catch (err) {
-        console.error('Error al cargar información:', err);
+        clearTimeout(timeout);
+        console.error('❌ Error al cargar información en Home:', err);
+        // Usar mock data como fallback
+        setInfo(MOCK_INFO);
+        setUsingMockInfo(true);
       }
     };
     fetchInfo();
   }, []);
+
+  // Filtrar proyectos destacados para la vista
+  const featuredProjects = projects.filter(p => p.destacado === 'SI' || p.destacado === true);
 
   return (
     <section className="home-container">
@@ -64,7 +99,9 @@ function Home() {
           </div>
 
           <h1 className="hero-title">
-            <span className="name-highlight">Lovato Matias</span>
+            <span className="name-highlight">
+              {info ? `${info.nombre} ${info.apellido}` : 'Lovato Matias'}
+            </span>
           </h1>
 
           <h2 className="hero-subtitle">
@@ -99,7 +136,7 @@ function Home() {
               <div className="stat-label">{freelanceExp.label}</div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">5+</div>
+              <div className="stat-number">{projects.length || 0}+</div>
               <div className="stat-label">Proyectos Realizados</div>
             </div>
             <div className="stat-item">
@@ -119,15 +156,21 @@ function Home() {
 
       {/* Social Links */}
       <div className="social-floating">
-        <a href="https://github.com/ShadeTheWitcher" target="_blank" rel="noopener noreferrer" className="social-link github">
-          <i className="fa-brands fa-github"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/lovato-matias-shade/" target="_blank" rel="noopener noreferrer" className="social-link linkedin">
-          <i className="fab fa-linkedin"></i>
-        </a>
-        <a href="mailto:matii_seba_11@hotmail.com" className="social-link email">
-          <i className="fas fa-envelope"></i>
-        </a>
+        {info?.github && (
+          <a href={info.github} target="_blank" rel="noopener noreferrer" className="social-link github">
+            <i className="fa-brands fa-github"></i>
+          </a>
+        )}
+        {info?.linkedin && (
+          <a href={info.linkedin} target="_blank" rel="noopener noreferrer" className="social-link linkedin">
+            <i className="fab fa-linkedin"></i>
+          </a>
+        )}
+        {info?.email && (
+          <a href={`mailto:${info.email}`} className="social-link email">
+            <i className="fas fa-envelope"></i>
+          </a>
+        )}
       </div>
 
       {/* Proyectos Destacados */}
@@ -137,28 +180,27 @@ function Home() {
           <p className="section-subtitle">Algunos de mis trabajos más recientes</p>
         </div>
 
+        {/* Banner de datos mock */}
+        {usingMockProjects && <MockDataBanner />}
+
+        {/* Skeleton mientras carga */}
         {loading && (
-          <div className="loading-state">
-            <p>Cargando proyectos...</p>
+          <div className="projects-grid">
+            {[1, 2, 3].map((i) => (
+              <div key={i} style={{ padding: '1rem' }}>
+                <Skeleton variant="card" height="300px" />
+                <Skeleton variant="title" width="80%" />
+                <Skeleton variant="text" width="100%" count={2} />
+              </div>
+            ))}
           </div>
         )}
 
-        {error && (
-          <div className="error-state">
-            <p>{error}</p>
-          </div>
-        )}
-
-        {!loading && !error && projects.length === 0 && (
-          <div className="empty-state">
-            <p>No hay proyectos destacados disponibles</p>
-          </div>
-        )}
-
-        {!loading && !error && projects.length > 0 && (
+        {/* Proyectos cargados */}
+        {!loading && featuredProjects.length > 0 && (
           <>
             <div className="projects-grid">
-              {projects.map((proyect) => (
+              {featuredProjects.map((proyect) => (
                 <ProjectCard key={proyect.id_proyect} proyect={proyect} />
               ))}
             </div>
@@ -170,6 +212,13 @@ function Home() {
               </a>
             </div>
           </>
+        )}
+
+        {/* Sin proyectos */}
+        {!loading && featuredProjects.length === 0 && !usingMockProjects && (
+          <div className="empty-state">
+            <p>No hay proyectos destacados disponibles</p>
+          </div>
         )}
       </section>
     </section>
