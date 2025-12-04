@@ -26,7 +26,7 @@ const About = () => {
         setEducation(MOCK_EDUCATION);
         setUsingMockData(true);
         setLoading(false);
-      }, 10000);
+      }, 15000);
 
       try {
         setLoading(true);

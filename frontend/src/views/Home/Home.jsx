@@ -23,12 +23,12 @@ function Home() {
   useEffect(() => {
     const fetchProjects = async () => {
       const timeout = setTimeout(() => {
-        // Si tarda más de 5 segundos, usar mock data
+        // Si tarda más de 15 segundos, usar mock data
         console.warn('⏱️ API tardó demasiado, usando datos mock');
         setProjects(MOCK_PROJECTS);
         setUsingMockProjects(true);
         setLoading(false);
-      }, 10000);
+      }, 15000);
 
       try {
         setLoading(true);
@@ -60,11 +60,11 @@ function Home() {
   useEffect(() => {
     const fetchInfo = async () => {
       const timeout = setTimeout(() => {
-        // Si tarda más de 5 segundos, usar mock data
+        // Si tarda más de 15 segundos, usar mock data
         console.warn('⏱️ API tardó demasiado, usando datos mock para info');
         setInfo(MOCK_INFO);
         setUsingMockInfo(true);
-      }, 10000);
+      }, 15000);
 
       try {
         const data = await getInfo();

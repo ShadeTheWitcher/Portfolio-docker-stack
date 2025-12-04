@@ -111,6 +111,8 @@ export const MockDataBanner = () => (
       </strong>
       <span style={{ fontSize: '0.9rem', opacity: 0.95 }}>
         La API no está disponible. Estos son datos de ejemplo para demostración.
+        <br />
+        Por favor, reinicia la página para intentar conectar nuevamente.
       </span>
     </div>
   </div>
