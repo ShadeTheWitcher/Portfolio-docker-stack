@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping frontend
-        run: curl -I --max-time 10 https://portfolio-docker-stack.onrender.com
+        run: curl -I --max-time 10 https://porfolio-lovato-matias.onrender.com
 
       - name: Ping backend
-        run: curl -I --max-time 10 https://portfolio-docker-stack-bakend.onrender.com
+        run: curl -f https://portfolio-docker-stack-bakend.onrender.com/api/projects
