@@ -136,7 +136,7 @@ function Home() {
               <div className="stat-label">{freelanceExp.label}</div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">{projects.length || 0}+</div>
+              <div className="stat-number">{projects.length || 3}+</div>
               <div className="stat-label">Proyectos Realizados</div>
             </div>
             <div className="stat-item">
