@@ -26,7 +26,33 @@ api.interceptors.request.use(
 // Interceptor para manejar errores de respuesta
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const { config, response } = error;
+    
+    // Configuración de reintentos
+    const RETRY_DELAY = 1500;
+    const MAX_RETRIES = 3;
+
+    // Condición para reintentar: Error de red o error 5xx (común durante el spin-up de Render)
+    const shouldRetry = config && !config._retry && (
+      !response || // Error de red (sin respuesta)
+      (response.status >= 500 && response.status < 600)
+    );
+
+    if (shouldRetry) {
+      config._retry = true; // Marcar como reintentado para el contador interno
+      config._retryCount = (config._retryCount || 0) + 1;
+
+      if (config._retryCount <= MAX_RETRIES) {
+        // Esperar antes del siguiente intento
+        const delay = RETRY_DELAY * config._retryCount;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        // Reintentar la petición
+        return api(config);
+      }
+    }
+
     if (error.response) {
       // El servidor respondió con un código de error
       const { status } = error.response;
