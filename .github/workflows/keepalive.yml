@@ -12,5 +12,11 @@ jobs:
       - name: Ping frontend
         run: curl -I --max-time 10 https://porfolio-lovato-matias.onrender.com
 
-      - name: Ping backend
-        run: curl -f https://portfolio-docker-stack-bakend.onrender.com/api/projects
+      - name: Ping backend root
+        run: curl -I -f --max-time 10 https://portfolio-docker-stack-bakend.onrender.com/
+
+      - name: Ping backend health
+        run: curl -I -f --max-time 10 https://portfolio-docker-stack-bakend.onrender.com/health
+
+      - name: Ping backend projects (DB wake)
+        run: curl -I -f --max-time 10 https://portfolio-docker-stack-bakend.onrender.com/api/projects
