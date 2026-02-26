@@ -172,6 +172,13 @@ CREATE TABLE IF NOT EXISTS proyecto_tecnologia (
 );
 
 -- ====================================
+-- ÍNDICES PARA OPTIMIZACIÓN
+-- ====================================
+CREATE INDEX IF NOT EXISTS idx_proyecto_baja_destacado ON proyecto (baja, destacado);
+CREATE INDEX IF NOT EXISTS idx_tecnologia_baja_skill ON tecnologia (baja, es_skill);
+CREATE INDEX IF NOT EXISTS idx_proyecto_imagenes_proyecto ON proyecto_imagenes (id_proyecto);
+
+-- ====================================
 -- TABLAS LEGACY (Mantener por compatibilidad)
 -- ====================================
 

@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from 'url';
+import compression from 'compression';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
 // Importar rutas
 import authRoutes from "./routes/authRoutes.js";
@@ -23,26 +26,33 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Crear carpetas uploads si no existen
-const uploadsDir = path.join(__dirname, 'uploads');
-const imagenesDir = path.join(uploadsDir, 'imagenes');
-const documentosDir = path.join(uploadsDir, 'documentos');
-const otrosDir = path.join(uploadsDir, 'otros');
+// --- Configuración de Carpetas de Uploads ---
+const initializeUploads = () => {
+  const uploadsDir = path.join(__dirname, 'uploads');
+  const subdirs = ['imagenes', 'documentos', 'otros'];
+  
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  
+  subdirs.forEach(subdir => {
+    const dirPath = path.join(uploadsDir, subdir);
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+  });
+  
+  return uploadsDir;
+};
 
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-if (!fs.existsSync(imagenesDir)) {
-  fs.mkdirSync(imagenesDir, { recursive: true });
-}
-if (!fs.existsSync(documentosDir)) {
-  fs.mkdirSync(documentosDir, { recursive: true });
-}
-if (!fs.existsSync(otrosDir)) {
-  fs.mkdirSync(otrosDir, { recursive: true });
-}
+const uploadsDir = initializeUploads();
 
-// Middlewares
+// --- Middlewares ---
+app.use(helmet({
+  crossOriginResourcePolicy: false, // Permitir cargar imágenes desde el frontend
+}));
+app.use(compression()); // Comprimir respuestas Gzip
+app.use(morgan('dev')); // Logs de peticiones en consola
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -63,7 +73,8 @@ app.use("/api/upload", uploadRoutes);
 app.get("/", (req, res) => {
   res.json({ 
     message: "Backend Portfolio API",
-    version: "1.0.0",
+    version: "1.1.0",
+    status: "Optimized",
     endpoints: {
       auth: "/api/auth",
       projects: "/api/projects",
@@ -93,7 +104,7 @@ app.use((req, res) => {
 
 // Manejo de errores global
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  console.error('❌ Error:', err.message);
   res.status(err.status || 500).json({
     error: err.message || 'Error interno del servidor',
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
@@ -104,13 +115,11 @@ app.use((err, req, res, next) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`
 ╔═══════════════════════════════════════╗
-║   🚀 Backend Portfolio API           ║
+║   🚀 Backend Portfolio API (Running)  ║
 ║   📡 Puerto: ${PORT}                    ║
 ║   🌍 Host: 0.0.0.0                   ║
-║   📝 Endpoints disponibles:          ║
-║      - /api/auth                     ║
-║      - /api/projects                 ║
-║      - /api/info                     ║
+║   🔒 Security: Helmet Enabled         ║
+║   📦 Compression: Gzip Enabled        ║
 ╚═══════════════════════════════════════╝
   `);
 });
