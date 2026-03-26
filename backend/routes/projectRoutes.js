@@ -6,7 +6,8 @@ import {
   createProject,
   updateProject,
   deleteProject,
-  toggleFeatured
+  toggleFeatured,
+  reorderProjects
 } from '../controllers/projectController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
@@ -22,5 +23,6 @@ router.post('/', authMiddleware, createProject);
 router.put('/:id', authMiddleware, updateProject);
 router.delete('/:id', authMiddleware, deleteProject);
 router.patch('/:id/destacar', authMiddleware, toggleFeatured);
+router.post('/reorder', authMiddleware, reorderProjects);
 
 export default router;

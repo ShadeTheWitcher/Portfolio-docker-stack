@@ -31,6 +31,7 @@ import {
     createProject,
     updateProject,
     deleteProject,
+    reorderProjects,
 } from '../../../services/projectService';
 import { getAllCategories } from '../../../services/categoryService';
 import { getAllTechnologies } from '../../../services/techService';
@@ -55,6 +56,7 @@ const Projects = () => {
         tecnologias: [],
         video_url: '',
         imagenes_adicionales: [],
+        orden: 0,
     });
 
     useEffect(() => {
@@ -110,6 +112,7 @@ const Projects = () => {
                 tecnologias: project.tecnologias ? project.tecnologias.map(t => t.id) : [],
                 video_url: project.video_url || '',
                 imagenes_adicionales: project.imagenes_adicionales || [],
+                orden: project.orden || 0,
             });
         } else {
             setCurrentProject(null);
@@ -124,6 +127,7 @@ const Projects = () => {
                 tecnologias: [],
                 video_url: '',
                 imagenes_adicionales: [],
+                orden: 0,
             });
         }
         setOpenDialog(true);
@@ -193,6 +197,38 @@ const Projects = () => {
         }
     };
 
+    const handleReorder = async (project, direction) => {
+        const currentIndex = projects.findIndex(p => p.id_proyect === project.id_proyect);
+        if (currentIndex === -1) return;
+
+        const newProjects = [...projects];
+        let targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+
+        if (targetIndex < 0 || targetIndex >= newProjects.length) return;
+
+        // Swapping projects in the local list
+        const temp = newProjects[currentIndex];
+        newProjects[currentIndex] = newProjects[targetIndex];
+        newProjects[targetIndex] = temp;
+
+        // Prepare the payload for the backend
+        // We only care about the orden values. We can just use the index + offset, 
+        // or swap their current orden values.
+        const orders = newProjects.map((p, index) => ({
+            id_proyect: p.id_proyect,
+            orden: index + 1
+        }));
+
+        try {
+            await reorderProjects(orders);
+            toast.success('Orden actualizado');
+            fetchProjects();
+        } catch (error) {
+            toast.error('Error al reordenar');
+            console.error(error);
+        }
+    };
+
     const columns = [
         {
             field: 'name_proyect',
@@ -205,6 +241,12 @@ const Projects = () => {
             headerName: 'Descripción',
             flex: 2,
             minWidth: 250,
+        },
+        {
+            field: 'orden',
+            headerName: 'Orden',
+            width: 80,
+            type: 'number',
         },
         {
             field: 'destacado',
@@ -225,6 +267,22 @@ const Projects = () => {
             sortable: false,
             renderCell: (params) => (
                 <Box>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleReorder(params.row, 'up')}
+                        disabled={projects.findIndex(p => p.id_proyect === params.row.id_proyect) === 0}
+                        sx={{ color: '#007aff' }}
+                    >
+                        <Typography variant="caption" sx={{ fontWeight: 'bold' }}>↑</Typography>
+                    </IconButton>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleReorder(params.row, 'down')}
+                        disabled={projects.findIndex(p => p.id_proyect === params.row.id_proyect) === projects.length - 1}
+                        sx={{ color: '#007aff' }}
+                    >
+                        <Typography variant="caption" sx={{ fontWeight: 'bold' }}>↓</Typography>
+                    </IconButton>
                     <IconButton
                         size="small"
                         onClick={() => handleOpenDialog(params.row)}
@@ -403,6 +461,16 @@ const Projects = () => {
                             onChange={handleChange}
                             fullWidth
                             placeholder="https://www.youtube.com/watch?v=..."
+                        />
+
+                        <TextField
+                            label="Orden de Visualización"
+                            name="orden"
+                            type="number"
+                            value={formData.orden}
+                            onChange={(e) => setFormData(prev => ({ ...prev, orden: parseInt(e.target.value) || 0 }))}
+                            fullWidth
+                            helperText="Números menores se muestran primero"
                         />
 
                         <Box>

@@ -41,3 +41,9 @@ export const toggleFeatured = async (id) => {
   const response = await api.patch(`/projects/${id}/destacar`);
   return response.data;
 };
+
+// Reordenar proyectos (requiere autenticación)
+export const reorderProjects = async (orders) => {
+  const response = await api.post('/projects/reorder', { orders });
+  return response.data;
+};

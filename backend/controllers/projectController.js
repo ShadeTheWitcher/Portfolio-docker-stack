@@ -14,7 +14,7 @@ export const getAllProjects = async (req, res) => {
       LEFT JOIN proyecto_imagenes pi ON p.id_proyect = pi.id_proyecto
       WHERE p.baja = 'NO'
       GROUP BY p.id_proyect, tp.descripcion
-      ORDER BY p.destacado DESC, p.id_proyect DESC
+      ORDER BY p.destacado DESC, p.orden ASC, p.id_proyect DESC
     `);
 
     if (result.rows.length > 0) {
@@ -40,7 +40,7 @@ export const getFeaturedProjects = async (req, res) => {
       LEFT JOIN tecnologia t ON pt.id_tecnologia = t.id
       WHERE p.baja = 'NO' AND p.destacado = 'SI'
       GROUP BY p.id_proyect, tp.descripcion
-      ORDER BY p.id_proyect DESC
+      ORDER BY p.orden ASC, p.id_proyect DESC
     `);
 
     res.json(result.rows);
@@ -101,12 +101,16 @@ export const createProject = async (req, res) => {
 
     await client.query('BEGIN');
 
+    // Obtener el orden máximo actual para poner el nuevo proyecto al final
+    const maxOrderResult = await client.query('SELECT COALESCE(MAX(orden), 0) as max_order FROM proyecto');
+    const nextOrder = maxOrderResult.rows[0].max_order + 1;
+
     // Insertar proyecto
     const projectResult = await client.query(`
-      INSERT INTO proyecto (name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, video_url)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO proyecto (name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, video_url, orden)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING *
-    `, [name_proyect, descripcion, categoria_id, link_github || null, link_web || null, imagen || '', destacado || 'NO', video_url || null]);
+    `, [name_proyect, descripcion, categoria_id, link_github || null, link_web || null, imagen || '', destacado || 'NO', video_url || null, nextOrder]);
 
     const newProject = projectResult.rows[0];
 
@@ -155,7 +159,7 @@ export const updateProject = async (req, res) => {
     if (isNaN(id)) {
       return res.status(400).json({ error: 'ID inválido' });
     }
-    const { name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, tecnologias, video_url, imagenes_adicionales } = req.body;
+    const { name_proyect, descripcion, categoria_id, link_github, link_web, imagen, destacado, tecnologias, video_url, imagenes_adicionales, orden } = req.body;
 
     await client.query('BEGIN');
 
@@ -163,10 +167,11 @@ export const updateProject = async (req, res) => {
     const result = await client.query(`
       UPDATE proyecto 
       SET name_proyect = $1, descripcion = $2, categoria_id = $3, 
-          link_github = $4, link_web = $5, imagen = $6, destacado = $7, video_url = $8
-      WHERE id_proyect = $9 AND baja = 'NO'
+          link_github = $4, link_web = $5, imagen = $6, destacado = $7, video_url = $8,
+          orden = COALESCE($9, orden)
+      WHERE id_proyect = $10 AND baja = 'NO'
       RETURNING *
-    `, [name_proyect, descripcion, categoria_id || 1, link_github || null, link_web || null, imagen || '', destacado || 'NO', video_url || null, id]);
+    `, [name_proyect, descripcion, categoria_id || 1, link_github || null, link_web || null, imagen || '', destacado || 'NO', video_url || null, orden, id]);
 
     if (result.rows.length === 0) {
       await client.query('ROLLBACK');
@@ -265,5 +270,35 @@ export const toggleFeatured = async (req, res) => {
   } catch (error) {
     console.error('Error al cambiar estado destacado:', error);
     res.status(500).json({ error: 'Error del servidor', message: error.message });
+  }
+};
+
+// Reordenar proyectos
+export const reorderProjects = async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const { orders } = req.body; // Array de { id_proyect, orden }
+
+    if (!orders || !Array.isArray(orders)) {
+      return res.status(400).json({ error: 'Se requiere un array de órdenes' });
+    }
+
+    await client.query('BEGIN');
+
+    for (const item of orders) {
+      await client.query(
+        'UPDATE proyecto SET orden = $1 WHERE id_proyect = $2',
+        [item.orden, item.id_proyect]
+      );
+    }
+
+    await client.query('COMMIT');
+    res.json({ message: 'Proyectos reordenados exitosamente' });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Error al reordenar proyectos:', error);
+    res.status(500).json({ error: 'Error del servidor', message: error.message });
+  } finally {
+    client.release();
   }
 };
