@@ -6,7 +6,7 @@ export const MOCK_INFO = {
   telefono: '+1234567890',
   linkedin: 'https://www.linkedin.com/in/lovato-matias-shade/',
   github: 'https://github.com/ShadeTheWitcher',
-  descripcion: 'Esta es información de muestra. Configura tu perfil en el panel de administración para ver tus datos reales.',
+  descripcion: 'Desarrollador Backend con experiencia en mantenimiento, soporte y mejora continua de aplicaciones existentes. Trabajo con SAP BTP, Node.js, CAP y APIs REST, realizando correcciones, optimización de rendimiento, actualización de dependencias e integración de nuevas funcionalidades sobre sistemas ya implementados. Enfocado en la calidad del código, estabilidad y resolución eficiente de incidencias para asegurar la continuidad operativa de las aplicaciones.',
   texto_home: 'Desarrollador apasionado por crear experiencias web modernas. Esta es información de ejemplo.',
   cv_url: '',
   imagen_perfil: ''

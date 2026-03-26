@@ -35,9 +35,7 @@ INSERT INTO info_laboral (
     'https://www.linkedin.com/in/lovato-matias-shade/',
     'https://t.me/ShadeTheWitcher',
     'https://github.com/ShadeTheWitcher',
-    'Desarrollador Full Stack apasionado por crear experiencias web modernas y funcionales. Con experiencia en React, Node.js y tecnologías cloud, me especializo en construir aplicaciones escalables y de alto rendimiento.
-
-Me encanta aprender nuevas tecnologías y enfrentar desafíos técnicos complejos. Siempre busco mejorar mis habilidades y mantenerme actualizado con las últimas tendencias en desarrollo web.',
+    'Desarrollador Backend con experiencia en mantenimiento, soporte y mejora continua de aplicaciones existentes. Trabajo con SAP BTP, Node.js, CAP y APIs REST, realizando correcciones, optimización de rendimiento, actualización de dependencias e integración de nuevas funcionalidades sobre sistemas ya implementados. Enfocado en la calidad del código, estabilidad y resolución eficiente de incidencias para asegurar la continuidad operativa de las aplicaciones.',
     'Transformo ideas en aplicaciones web robustas y escalables. Especializado en desarrollo Full Stack con React, Node.js y PostgreSQL.',
     'React, Node.js, Express, PostgreSQL, Docker, JavaScript, Python, Git, REST APIs, JWT, Material-UI, SCSS',
     'https://avatars.githubusercontent.com/u/yourusername',

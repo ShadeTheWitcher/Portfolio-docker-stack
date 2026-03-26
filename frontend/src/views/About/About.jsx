@@ -177,7 +177,7 @@ const About = () => {
           </h3>
           <p className="bio-text">
             {info?.descripcion ||
-              'Desarrollador Full Stack apasionado por crear experiencias web modernas y funcionales.'}
+              'Desarrollador Backend con experiencia en mantenimiento, soporte y mejora continua de aplicaciones existentes. Trabajo con SAP BTP, Node.js, CAP y APIs REST, realizando correcciones, optimización de rendimiento, actualización de dependencias e integración de nuevas funcionalidades sobre sistemas ya implementados.'}
           </p>
 
           <div className="bio-actions">
