@@ -51,16 +51,22 @@ const uploadsDir = initializeUploads();
 
 // --- Optimizaciones ---
 
-// 1. Rate Limiting Global (100 reqs por 15 min por IP)
+// 1. Rate Limiting Global (Más flexible para desarrollo y administradores)
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: { error: 'Demasiadas peticiones desde esta IP, por favor intenta en 15 minutos' },
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  // 1000 requests en producción, 10000 en desarrollo
+  max: process.env.NODE_ENV === 'development' ? 10000 : 1000, 
+  message: { 
+    error: 'Demasiadas peticiones desde esta IP, por favor intenta en 15 minutos',
+    hint: 'Si eres el administrador, asegúrate de estar logueado para evitar este límite.'
+  },
   standardHeaders: true,
   legacyHeaders: false,
+  // No limitar si la petición tiene token (es un administrador) o si estamos en desarrollo local
+  skip: (req) => {
+    return !!req.headers.authorization || process.env.NODE_ENV === 'development';
+  },
 });
-
-// 2. Caché Inteligente (5 minutos)
 // Solo cachea si NO hay header de autorización (usuario público) y respuesta es 200 OK.
 // Así el admin siempre ve los cambios en tiempo real.
 const cache = apicache.middleware;
