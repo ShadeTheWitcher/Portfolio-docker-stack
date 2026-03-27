@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProjectById } from '../../services/projectService';
 import ImageLightbox from '../../components/ImageLightbox';
+import { MOCK_PROJECTS, MockDataBanner } from '../../utils/mockData';
 import './ProjectDetails.scss';
 
 const ProjectDetails = () => {
@@ -10,6 +11,7 @@ const ProjectDetails = () => {
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [usingMockData, setUsingMockData] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -24,9 +26,19 @@ const ProjectDetails = () => {
                 const data = await getProjectById(id);
                 setProject(data);
                 setSelectedImage(data.imagen);
+                setUsingMockData(false);
+                setError(null);
             } catch (err) {
-                console.error('Error al cargar proyecto:', err);
-                setError('No se pudo cargar el proyecto');
+                console.error('Error al cargar proyecto, intentando con mock data:', err);
+                const mockProject = MOCK_PROJECTS.find(p => p.id_proyect.toString() === id.toString());
+                if (mockProject) {
+                    setProject(mockProject);
+                    setSelectedImage(mockProject.imagen);
+                    setUsingMockData(true);
+                    setError(null);
+                } else {
+                    setError('No se pudo cargar el proyecto');
+                }
             } finally {
                 setLoading(false);
             }
@@ -54,7 +66,6 @@ const ProjectDetails = () => {
         );
     }
 
-    // Helper para extraer ID de YouTube
     const getYoutubeId = (url) => {
         if (!url) return null;
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -103,6 +114,8 @@ const ProjectDetails = () => {
 
     return (
         <div className="project-details-container">
+            {usingMockData && <MockDataBanner />}
+
             <button onClick={() => navigate('/proyectos')} className="btn-back-floating">
                 <i className="fas fa-arrow-left"></i> Volver
             </button>
@@ -145,7 +158,6 @@ const ProjectDetails = () => {
 
             <div className="project-content">
                 <div className="media-section">
-                    {/* Video Section */}
                     {youtubeId && (
                         <div className="video-container">
                             <iframe
@@ -158,7 +170,6 @@ const ProjectDetails = () => {
                         </div>
                     )}
 
-                    {/* Main Image (if no video or as fallback) */}
                     {!youtubeId && (
                         <div className="main-image-container">
                             {!mainImageError && project.imagen ? (
@@ -177,7 +188,6 @@ const ProjectDetails = () => {
                         </div>
                     )}
 
-                    {/* Screenshots Gallery */}
                     {project.imagenes_adicionales && project.imagenes_adicionales.length > 0 && (
                         <div className="gallery-section">
                             <h3>Galería</h3>

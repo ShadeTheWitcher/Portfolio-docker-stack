@@ -15,47 +15,54 @@ export const MOCK_INFO = {
 export const MOCK_PROJECTS = [
   {
     id_proyect: 1,
-    name_proyect: 'Proyecto Demo 1',
-    descripcion: 'Este es un proyecto de ejemplo. Agrega tus proyectos reales desde el panel de administración.',
+    name_proyect: 'Portfolio Docker Stack',
+    descripcion: 'Portfolio profesional desplegado con Docker stack, incluyendo frontend React, backend Node.js y base de datos PostgreSQL. Implementa autenticación JWT, panel de administración completo con Material-UI, y gestión de proyectos, tecnologías y educación.',
+    categoria_nombre: 'Web',
     tecnologias: [
       { nombre: 'React', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
-      { nombre: 'Node.js', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' }
+      { nombre: 'Node.js', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+      { nombre: 'PostgreSQL', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
+      { nombre: 'Docker', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' }
     ],
-    link_github: 'https://github.com',
-    link_web: '',
-    imagen: '',
+    link_github: 'https://github.com/ShadeTheWitcher/Portfolio-docker-stack',
+    link_web: 'https://portfolio-demo.com',
+    imagen: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop',
     destacado: 'SI',
-    fecha_inicio: '2024-01-01',
-    fecha_fin: null
+    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    imagenes_adicionales: [
+      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&h=600&fit=crop'
+    ]
   },
   {
     id_proyect: 2,
-    name_proyect: 'Proyecto Demo 2',
-    descripcion: 'Otro proyecto de muestra para demostrar el diseño.',
+    name_proyect: 'E-commerce App',
+    descripcion: 'Plataforma de comercio electrónico con carrito de compras, pagos integrados y panel de administración.',
+    categoria_nombre: 'Web',
     tecnologias: [
-      { nombre: 'JavaScript', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-      { nombre: 'CSS', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' }
+      { nombre: 'React', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+      { nombre: 'Firebase', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg' }
     ],
     link_github: 'https://github.com',
     link_web: '',
-    imagen: '',
+    imagen: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=800&h=600&fit=crop',
     destacado: 'SI',
-    fecha_inicio: '2024-02-01',
-    fecha_fin: null
+    imagenes_adicionales: []
   },
   {
     id_proyect: 3,
-    name_proyect: 'Proyecto Demo 3',
-    descripcion: 'Tercer proyecto de ejemplo.',
+    name_proyect: 'Task Manager XP',
+    descripcion: 'Gestor de tareas avanzado con tableros kanban y notificaciones en tiempo real.',
+    categoria_nombre: 'Escritorio',
     tecnologias: [
-      { nombre: 'Vue.js', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg' }
+      { nombre: 'JavaScript', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+      { nombre: 'Electron', imagen: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/electron/electron-original.svg' }
     ],
     link_github: 'https://github.com',
     link_web: '',
-    imagen: '',
+    imagen: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&h=600&fit=crop',
     destacado: 'SI',
-    fecha_inicio: '2024-03-01',
-    fecha_fin: null
+    imagenes_adicionales: []
   }
 ];
 
